@@ -2,7 +2,7 @@
 
 # Frij 75477M
 
-This repository contains team 75477M's code for the [2025-2026 Push Back](https://www.youtube.com/watch?v=ocmONiVun9M) season of the VEX robotics competition.
+This repository contains team 75477M's code for the [2026-2027 Override](https://www.youtube.com/watch?v=68NxYIAzbkY) season of the VEX robotics competition.
 
 Having the code in a git remote allows us to collaborate as a team easily as everyone has access to the codebase and any changes can immediately be reflected across all our devices.
 
