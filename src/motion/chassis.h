@@ -25,6 +25,8 @@ private:
     pros::Motor m_backLeft;
     pros::Motor m_backRight;
 
+    
+
     DriveControllerData m_driveControllerData;
     ControllerData m_linearControllerData;
     ControllerData m_angularControllerData;
@@ -33,6 +35,8 @@ public:
     Chassis(pros::Motor& frontLeft, pros::Motor& frontRight, pros::Motor& middleLeft, pros::Motor& middleRight, pros::Motor& backLeft, pros::Motor& backRight, const DriveControllerData& driveControllerData, const ControllerData& linearControllerData, const ControllerData& angularControllerData) : m_frontLeft(std::move(frontLeft)), m_frontRight(std::move(frontRight)), m_middleLeft(std::move(middleLeft)), m_middleRight(std::move(middleRight)), m_backLeft(std::move(backLeft)), m_backRight(std::move(backRight)), m_driveControllerData(std::move(driveControllerData)), m_linearControllerData(std::move(linearControllerData)), m_angularControllerData(std::move(angularControllerData)) {
         
     }
+
+    void Calibrate();
 
     /**
      * @brief Sets the voltage and moves the robot for each motor in the chassis. Used in opcontrol and autonomous.
@@ -47,15 +51,14 @@ public:
     void MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int middleLeftVoltage, int middleRightVoltage, int backLeftVoltage, int backRightVoltage);
 
     /**
-     * @brief Robot-centric arcade drive. The robot moves relative to the direction it is facing. It does not use curvature drive.
+     * @brief Arcade drive that moves depending on if it is field centric or not.
      * 
      * @param forwardSpeed The speed to move forward. Positive values move the robot forward, negative values move the robot backward.
      * @param strafeSpeed The speed to move sideways. Positive values move the robot to the right, negative values move the robot to the left.
      * @param turningSpeed The speed to turn. Positive values turn the robot clockwise, negative values turn the robot counterclockwise.
+     * @param fieldCentric Whether to use field-centric or robot-centric control.
      */
-    void RobotCentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed);
-    void FieldCentricArcade(uint32_t forwardSpeed, uint32_t strafeSpeed, uint32_t turningSpeed);
+    void CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed, bool fieldCentric = false);
 
-    void RobotCentricCurvature(int forwardSpeed, int strafeSpeed, int turningSpeed);
-    void FieldCentricCurvature(int forwardSpeed, int strafeSpeed, int turningSpeed);
+    void MoveToPosition(double targetX, double targetY, double targetHeading, int timeoutSeconds);
 };

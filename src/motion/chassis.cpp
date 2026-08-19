@@ -1,6 +1,13 @@
 #include "chassis.h"
 #include "../globals.h"
 #include "pros/misc.h"
+#include <cmath>
+
+void Chassis::Calibrate() {
+    imu.reset(true);
+
+    controller1.rumble("- . -");
+}
 
 void Chassis::MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int middleLeftVoltage, int middleRightVoltage, int backLeftVoltage, int backRightVoltage) {
     m_frontLeft.move(frontLeftVoltage);
@@ -11,14 +18,13 @@ void Chassis::MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int middl
     m_backRight.move(backRightVoltage);
 }
 
-void Chassis::RobotCentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed) {
+void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed, bool fieldCentric) {
 
     double currentHeading = imu.get_heading();
 
     if(abs(strafeSpeed) < this->m_driveControllerData.getDeadzone()) strafeSpeed = 0;
     if(abs(forwardSpeed) < this->m_driveControllerData.getDeadzone()) forwardSpeed = 0;
     if(abs(turningSpeed) < this->m_driveControllerData.getDeadzone()) {
-        turningSpeed = 0;
 
         this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTargetHeading() - currentHeading);
 
@@ -37,7 +43,19 @@ void Chassis::RobotCentricArcade(int forwardSpeed, int strafeSpeed, int turningS
     }
     else {
         this->m_driveControllerData.setTargetHeading(currentHeading);
+        this->m_driveControllerData.getTurningControllerData().setError(0);
+        this->m_driveControllerData.getTurningControllerData().setIntegral(0);
+        this->m_driveControllerData.getTurningControllerData().setDerivative(0);
+        this->m_driveControllerData.getTurningControllerData().setLastError(0);
         turningSpeed *= this->m_driveControllerData.getSensitivity();
+    }
+
+    if (fieldCentric) {
+        int thetaHeading = currentHeading * M_PI / 180;
+
+        int tempForwardSpeed = strafeSpeed * sin(thetaHeading) + forwardSpeed * cos(thetaHeading);
+        strafeSpeed = strafeSpeed * cos(thetaHeading) - forwardSpeed * sin(thetaHeading);
+        forwardSpeed = tempForwardSpeed;
     }
 
     int frontLeft = forwardSpeed + strafeSpeed + turningSpeed;
@@ -61,11 +79,17 @@ void Chassis::RobotCentricArcade(int forwardSpeed, int strafeSpeed, int turningS
     MoveVoltage(frontLeft, frontRight, middleLeft, middleRight, backLeft, backRight);
 }
 
+void Chassis::MoveToPosition(double targetX, double targetY, double targetHeading, int timeoutSeconds) {
+    this->m_driveControllerData.getTurningControllerData().setError(0);
+    this->m_driveControllerData.getTurningControllerData().setIntegral(0);
+    this->m_driveControllerData.getTurningControllerData().setDerivative(0);
+    this->m_driveControllerData.getTurningControllerData().setLastError(0);
 
-void Chassis::FieldCentricArcade(uint32_t forwardSpeed, uint32_t strafeSpeed, uint32_t turningSpeed) {
-    
-}
+    int timeoutMilliseconds = timeoutSeconds * 1000;
 
-void Chassis::RobotCentricCurvature(int forwardSpeed, int strafeSpeed, int turningSpeed) {
-
+    while (timeoutMilliseconds > 0) {
+        
+        timeoutMilliseconds -= 20;
+        pros::delay(20);
+    }
 }

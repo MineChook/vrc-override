@@ -14,6 +14,9 @@ private:
     double m_integral;
     double m_derivative;
 
+    double m_positionX;
+    double m_positionY;
+
 public:
     ControllerData(double kp = 0, double ki = 0, double kd = 0) {
         this->m_kp = kp;
