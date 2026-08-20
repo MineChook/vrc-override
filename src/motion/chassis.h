@@ -1,8 +1,11 @@
 
 #pragma once
 
+#define EIGEN_DONT_VECTORIZE
+#include "Eigen/Core"
 #include "api.h"
 #include "controller.hpp"
+#include "odometry.h"
 
 enum MotorType {
     FrontLeft = 0,
@@ -25,14 +28,14 @@ private:
     pros::Motor m_backLeft;
     pros::Motor m_backRight;
 
-    
+    Odometry m_odometry;
 
     DriveControllerData m_driveControllerData;
-    ControllerData m_linearControllerData;
-    ControllerData m_angularControllerData;
+    ControllerData<Eigen::Vector2d> m_linearControllerData;
+    ControllerData<double> m_angularControllerData;
 
 public:
-    Chassis(pros::Motor& frontLeft, pros::Motor& frontRight, pros::Motor& middleLeft, pros::Motor& middleRight, pros::Motor& backLeft, pros::Motor& backRight, const DriveControllerData& driveControllerData, const ControllerData& linearControllerData, const ControllerData& angularControllerData) : m_frontLeft(std::move(frontLeft)), m_frontRight(std::move(frontRight)), m_middleLeft(std::move(middleLeft)), m_middleRight(std::move(middleRight)), m_backLeft(std::move(backLeft)), m_backRight(std::move(backRight)), m_driveControllerData(std::move(driveControllerData)), m_linearControllerData(std::move(linearControllerData)), m_angularControllerData(std::move(angularControllerData)) {
+    Chassis(pros::Motor& frontLeft, pros::Motor& frontRight, pros::Motor& middleLeft, pros::Motor& middleRight, pros::Motor& backLeft, pros::Motor& backRight, const Odometry& odometry, const DriveControllerData& driveControllerData, const ControllerData<Eigen::Vector2d>& linearControllerData, const ControllerData<double>& angularControllerData) : m_frontLeft(std::move(frontLeft)), m_frontRight(std::move(frontRight)), m_middleLeft(std::move(middleLeft)), m_middleRight(std::move(middleRight)), m_backLeft(std::move(backLeft)), m_backRight(std::move(backRight)), m_odometry(std::move(odometry)), m_driveControllerData(std::move(driveControllerData)), m_linearControllerData(std::move(linearControllerData)), m_angularControllerData(std::move(angularControllerData)) {
         
     }
 
@@ -61,4 +64,8 @@ public:
     void CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed, bool fieldCentric = false);
 
     void MoveToPosition(double targetX, double targetY, double targetHeading, int timeoutSeconds);
+
+    Odometry& getOdometry() {
+        return m_odometry;
+    }
 };

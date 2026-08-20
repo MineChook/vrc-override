@@ -3,25 +3,28 @@
 
 #include <cstdint>
 
+template <typename ErrorType>
 class ControllerData {
 private:
     double m_kp;
     double m_ki;
     double m_kd;
 
-    double m_error;
-    double m_lastError;
-    double m_integral;
-    double m_derivative;
+    double m_distanceTolerance;
+    double m_headingTolerance;
 
-    double m_positionX;
-    double m_positionY;
+    ErrorType m_error;
+    ErrorType m_lastError;
+    ErrorType m_integral;
+    ErrorType m_derivative;
 
 public:
-    ControllerData(double kp = 0, double ki = 0, double kd = 0) {
+    ControllerData(double kp = 0, double ki = 0, double kd = 0, double distanceTolerance = 0, double headingTolerance = 0) {
         this->m_kp = kp;
         this->m_ki = ki;
         this->m_kd = kd;
+        this->m_distanceTolerance = distanceTolerance;
+        this->m_headingTolerance = headingTolerance;
     }
 
     double getKp() const {
@@ -36,35 +39,43 @@ public:
         return m_kd;
     }
 
-    double getError() const {
+    double getDistanceTolerance() const {
+        return m_distanceTolerance;
+    }
+
+    double getHeadingTolerance() const {
+        return m_headingTolerance;
+    }
+
+    ErrorType getError() const {
         return m_error;
     }
 
-    void setError(double error) {
+    void setError(ErrorType error) {
         m_error = error;
     }
 
-    double getLastError() const {
+    ErrorType getLastError() const {
         return m_lastError;
     }
 
-    void setLastError(double lastError) {
+    void setLastError(ErrorType lastError) {
         m_lastError = lastError;
     }
 
-    double getIntegral() const {
+    ErrorType getIntegral() const {
         return m_integral;
     }
 
-    void setIntegral(double integral) {
+    void setIntegral(ErrorType integral) {
         m_integral = integral;
     }
 
-    double getDerivative() const {
+    ErrorType getDerivative() const {
         return m_derivative;
     }
 
-    void setDerivative(double derivative) {
+    void setDerivative(ErrorType derivative) {
         m_derivative = derivative;
     }
 };
@@ -74,12 +85,12 @@ private:
     uint8_t m_sensitivity;
     uint8_t m_maxSpeed;
     uint8_t m_deadzone;
-    ControllerData m_turningControllerData;
+    ControllerData<double> m_turningControllerData;
 
     double m_targetHeading = 0;
 
 public:
-    DriveControllerData(uint8_t sensitivity, uint8_t maxSpeed, uint8_t deadzone, ControllerData turningControllerData) {
+    DriveControllerData(uint8_t sensitivity, uint8_t maxSpeed, uint8_t deadzone, ControllerData<double> turningControllerData) {
         this->m_sensitivity = sensitivity;
         this->m_maxSpeed = maxSpeed;
         this->m_deadzone = deadzone;
@@ -98,7 +109,7 @@ public:
         return m_deadzone;
     }
 
-    ControllerData getTurningControllerData() const {
+    ControllerData<double> getTurningControllerData() const {
         return m_turningControllerData;
     }
 
