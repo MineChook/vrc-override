@@ -13,10 +13,10 @@ private:
     bool m_stopTask = false;
 public:
     Odometry(double verticalTrackingWheelOffset, double horizontalTrackingWheelOffset) : m_verticalTrackingWheelOffset(verticalTrackingWheelOffset), m_horizontalTrackingWheelOffset(horizontalTrackingWheelOffset) {};
-    void startUpdating();
-    void stopUpdating();
-    double getX();
-    double getY();
-    double getHeading();
-    void setPosition(double x, double y, double heading);
+    void StartUpdating();
+    void StopUpdating();
+    double GetX();
+    double GetY();
+    double GetHeading();
+    void SetPosition(double x, double y, double heading);
 };

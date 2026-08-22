@@ -7,19 +7,19 @@ double degreesToDistance(double degrees) {
     return (degrees / 360.0) * (2.0 * M_PI);
 }
 
-double Odometry::getX() {
+double Odometry::GetX() {
     return m_x;
 }
 
-double Odometry::getY() {
+double Odometry::GetY() {
     return m_y;
 }
 
-double Odometry::getHeading() {
+double Odometry::GetHeading() {
     return m_heading;
 }
 
-void Odometry::startUpdating() {
+void Odometry::StartUpdating() {
     // Start a new task to update the odometry values
     pros::Task odometryTask([](void* param) {
         Odometry* odometry = static_cast<Odometry*>(param);
@@ -52,9 +52,7 @@ void Odometry::startUpdating() {
             Eigen::Vector2d localTranslation(deltaXLocal, deltaYLocal);
             Eigen::Vector2d globalTranslation = globalRotation * localTranslation;
 
-            odometry->m_x += globalTranslation.x();
-            odometry->m_y += globalTranslation.y();
-            odometry->m_heading = currentHeadingRadians;
+            odometry->SetPosition(globalTranslation.x(), globalTranslation.y(), currentHeadingRadians);
 
             odometry->m_lastVerticalDegrees = currentVerticalDegrees;
             odometry->m_lastHorizontalDegrees = currentHorizontalDegrees;
@@ -65,11 +63,11 @@ void Odometry::startUpdating() {
     }, this);
 }
 
-void Odometry::stopUpdating() {
+void Odometry::StopUpdating() {
     m_stopTask = true;
 }
 
-void Odometry::setPosition(double x, double y, double heading) {
+void Odometry::SetPosition(double x, double y, double heading) {
     m_x = x;
     m_y = y;
     m_heading = heading;

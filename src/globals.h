@@ -15,7 +15,8 @@ inline pros::Motor middleRight(5, pros::MotorGears::blue, pros::MotorEncoderUnit
 inline pros::Motor backLeft(3, pros::MotorGears::blue, pros::MotorEncoderUnits::degrees);
 inline pros::Motor backRight(6, pros::MotorGears::blue, pros::MotorEncoderUnits::degrees);
 
-inline pros::MotorGroup lift({11, 12}, pros::MotorGear::green, pros::MotorUnits::degrees);
+inline pros::MotorGroup lift({11, -12}, pros::MotorGear::green, pros::MotorUnits::degrees);
+inline pros::MotorGroup intake({7, 8, 9}, pros::MotorGear::blue, pros::MotorUnits::degrees);
 
 inline pros::Imu imu(7);
 inline pros::Rotation verticalTrackingWheel(8);

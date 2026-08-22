@@ -65,7 +65,7 @@ public:
 
     void MoveToPosition(double targetX, double targetY, double targetHeading, int timeoutSeconds);
 
-    Odometry& getOdometry() {
+    Odometry& GetOdometry() {
         return m_odometry;
     }
 };

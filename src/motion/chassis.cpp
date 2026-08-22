@@ -17,7 +17,7 @@ const Eigen::Matrix<double, 6, 3> kinematicsMatrix = (Eigen::Matrix<double, 6, 3
 void Chassis::Calibrate() {
     imu.reset(true);
 
-    m_odometry.setPosition(0, 0, 0);
+    m_odometry.SetPosition(0, 0, 0);
 
     controller1.rumble("- . -");
 }
@@ -103,10 +103,11 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
     int timeoutMilliseconds = timeoutSeconds * 1000;
 
     while (timeoutMilliseconds > 0) {
+        double currentHeading = m_odometry.GetHeading();
 
-        double xError = targetX - m_odometry.getX();
-        double yError = targetY - m_odometry.getY();
-        double headingError = targetHeading - m_odometry.getHeading();
+        double xError = targetX - m_odometry.GetX();
+        double yError = targetY - m_odometry.GetY();
+        double headingError = targetHeading - currentHeading;
 
         while (headingError > M_PI) {
             headingError -= 2 * M_PI;
@@ -114,8 +115,6 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         while (headingError < -M_PI) {
             headingError += 2 * M_PI;
         }
-        
-        double currentHeading = m_odometry.getHeading();
 
         Eigen::Matrix2d rotation;
         rotation <<  std::cos(currentHeading), -std::sin(currentHeading), std::sin(currentHeading),  std::cos(currentHeading);
