@@ -5,11 +5,9 @@
 #define EIGEN_DONT_VECTORIZE
 #include "Eigen/Dense"
 
-const Eigen::Matrix<double, 6, 3> kinematicsMatrix = (Eigen::Matrix<double, 6, 3>() << // (forward, strafe, turn)
+const Eigen::Matrix<double, 4, 3> kinematicsMatrix = (Eigen::Matrix<double, 4, 3>() << // (forward, strafe, turn)
     1, 1, 1, // front left
     -1, 1, 1, // front right
-    1, 0, 1, // middle left
-    -1, 0, 1, // middle right
     1, -1, 1, // back left
     -1, -1, 1 // back right
 ).finished();
@@ -22,11 +20,9 @@ void Chassis::Calibrate() {
     controller1.rumble("- . -");
 }
 
-void Chassis::MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int middleLeftVoltage, int middleRightVoltage, int backLeftVoltage, int backRightVoltage) {
+void Chassis::MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int backLeftVoltage, int backRightVoltage) {
     m_frontLeft.move(frontLeftVoltage);
     m_frontRight.move(frontRightVoltage);
-    m_middleLeft.move(middleLeftVoltage);
-    m_middleRight.move(middleRightVoltage);
     m_backLeft.move(backLeftVoltage);
     m_backRight.move(backRightVoltage);
 }
@@ -80,14 +76,17 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
     }
 
     Eigen::Vector3d input(vy, vx, turningSpeed);
-    Eigen::Matrix<double, 6, 1> motorVelocities = kinematicsMatrix * input;
+    Eigen::Matrix<double, 4, 1> motorVelocities = kinematicsMatrix * input;
 
     double maxVal = motorVelocities.cwiseAbs().maxCoeff();
     if (maxVal > 127.0) {
         motorVelocities *= (127.0 / maxVal);
     }
 
-    MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)), static_cast<int>(motorVelocities(4)), static_cast<int>(motorVelocities(5)));
+    pros::lcd::print(0, "turningSpeed: %f", turningSpeed);
+    pros::lcd::print(1, "currentHeading: %f", currentHeading);
+
+    MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)));
 }
 
 void Chassis::MoveToPosition(double targetX, double targetY, double targetHeading, int timeoutSeconds) {
@@ -124,7 +123,7 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
 
         double distanceError = std::hypot(translationError.x(), translationError.y());
         if (distanceError < m_linearControllerData.getDistanceTolerance() && std::abs(headingError) < m_angularControllerData.getHeadingTolerance()) {
-            MoveVoltage(0, 0, 0, 0, 0, 0);
+            MoveVoltage(0, 0, 0, 0);
             return;
         }
 
@@ -142,14 +141,14 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         double turningSpeed = m_angularControllerData.getKp() * headingError + m_angularControllerData.getKi() * m_angularControllerData.getIntegral() + m_angularControllerData.getKd() * m_angularControllerData.getDerivative();
 
         Eigen::Vector3d velocityInput(vy, vx, turningSpeed);
-        Eigen::Matrix<double, 6, 1> motorVelocities = kinematicsMatrix * velocityInput;
+        Eigen::Matrix<double, 4, 1> motorVelocities = kinematicsMatrix * velocityInput;
 
         double maxVal = motorVelocities.cwiseAbs().maxCoeff();
         if (maxVal > 127.0) {
             motorVelocities *= (127.0 / maxVal);
         }
 
-        MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)), static_cast<int>(motorVelocities(4)), static_cast<int>(motorVelocities(5)));
+        MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)));
 
         m_linearControllerData.setLastError(translationError);
         m_angularControllerData.setLastError(headingError);
@@ -158,5 +157,5 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         pros::delay(20);
     }
 
-    MoveVoltage(0, 0, 0, 0, 0, 0);
+    MoveVoltage(0, 0, 0, 0);
 }
