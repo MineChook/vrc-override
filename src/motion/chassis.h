@@ -28,6 +28,22 @@ public:
         
     }
 
+    pros::Motor& GetFrontLeftMotor() {
+        return m_frontLeft;
+    }
+
+    pros::Motor& GetFrontRightMotor() {
+        return m_frontRight;
+    }
+
+    pros::Motor& GetBackLeftMotor() {
+        return m_backLeft;
+    }
+
+    pros::Motor& GetBackRightMotor() {
+        return m_backRight;
+    }
+
     void Calibrate();
 
     /**

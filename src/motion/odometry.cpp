@@ -1,5 +1,6 @@
 #include "odometry.h"
 #include "../globals.h"
+#include <cmath>
 #define EIGEN_DONT_VECTORIZE
 #include "Eigen/Core"
 
@@ -27,14 +28,8 @@ void Odometry::StartUpdating() {
             if (odometry->m_stopTask) {
                 break; // Exit the loop if the task is stopped
             }
-
-            double currentVerticalDegrees = verticalTrackingWheel.get_position();
-            double currentHorizontalDegrees = horizontalTrackingWheel.get_position();
             double currentHeadingRadians = imu.get_heading() * M_PI / 180.0;
-
-            double verticalRaw = degreesToDistance(currentVerticalDegrees - odometry->m_lastVerticalDegrees);
-            double horizontalRaw = degreesToDistance(currentHorizontalDegrees - odometry->m_lastHorizontalDegrees);
-            double headingRaw = currentHeadingRadians - odometry->m_lastHeading;
+            double headingRaw = currentHeadingRadians - currentHeadingRadians - odometry->m_lastHeading;
 
             if (headingRaw > M_PI) {
                 headingRaw -= 2 * M_PI;
@@ -42,8 +37,42 @@ void Odometry::StartUpdating() {
                 headingRaw += 2 * M_PI;
             }
 
-            double deltaYLocal = verticalRaw - odometry->m_verticalTrackingWheelOffset * headingRaw;
-            double deltaXLocal = horizontalRaw - odometry->m_horizontalTrackingWheelOffset * headingRaw;
+            double deltaXLocal = 0;
+            double deltaYLocal = 0;
+
+            if (odometry->m_type == OdometryType::TRACKING_WHEELS) {
+
+                double currentVerticalDegrees = verticalTrackingWheel.get_position();
+                double currentHorizontalDegrees = horizontalTrackingWheel.get_position();
+
+                double verticalRaw = degreesToDistance(currentVerticalDegrees - odometry->m_lastVerticalDegrees);
+                double horizontalRaw = degreesToDistance(currentHorizontalDegrees - odometry->m_lastHorizontalDegrees);
+
+                deltaYLocal = verticalRaw - odometry->m_verticalTrackingWheelOffset * headingRaw;
+                deltaXLocal = horizontalRaw - odometry->m_horizontalTrackingWheelOffset * headingRaw;
+
+                odometry->m_lastVerticalDegrees = currentVerticalDegrees;
+                odometry->m_lastHorizontalDegrees = currentHorizontalDegrees;
+            }
+            else if (odometry->m_type == OdometryType::X_DRIVE) {
+                double leftFrontDegrees = chassis.GetFrontLeftMotor().get_position();
+                double rightFrontDegrees = chassis.GetFrontRightMotor().get_position();
+                double leftBackDegrees = chassis.GetBackLeftMotor().get_position();
+                double rightBackDegrees = chassis.GetBackRightMotor().get_position();
+
+                double leftFrontDistance = degreesToDistance(leftFrontDegrees - odometry->m_lastForwardLeftDegrees);
+                double rightFrontDistance = degreesToDistance(rightFrontDegrees - odometry->m_lastForwardRightDegrees);
+                double leftBackDistance = degreesToDistance(leftBackDegrees - odometry->m_lastBackLeftDegrees);
+                double rightBackDistance = degreesToDistance(rightBackDegrees - odometry->m_lastBackRightDegrees);
+
+                deltaYLocal = (leftFrontDistance - rightFrontDistance + leftBackDistance - rightBackDistance) / 4.0 * std::sqrt(2.0);
+                deltaXLocal = (leftFrontDistance + rightFrontDistance - leftBackDistance - rightBackDistance) / 4.0 * std::sqrt(2.0);
+
+                odometry->m_lastForwardLeftDegrees = leftFrontDegrees;
+                odometry->m_lastForwardRightDegrees = rightFrontDegrees;
+                odometry->m_lastBackLeftDegrees = leftBackDegrees;
+                odometry->m_lastBackRightDegrees = rightBackDegrees;
+            }
 
             double averageHeading = odometry->m_lastHeading + headingRaw / 2.0;
 
@@ -53,9 +82,6 @@ void Odometry::StartUpdating() {
             Eigen::Vector2d globalTranslation = globalRotation * localTranslation;
 
             odometry->SetPosition(globalTranslation.x(), globalTranslation.y(), currentHeadingRadians);
-
-            odometry->m_lastVerticalDegrees = currentVerticalDegrees;
-            odometry->m_lastHorizontalDegrees = currentHorizontalDegrees;
             odometry->m_lastHeading = currentHeadingRadians;
 
             pros::delay(20); // Delay for 20 milliseconds

@@ -40,7 +40,6 @@ void thread() {
 			else {
 				lift.move(0);
 			}
-
 			if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 				intake.move(127);
 			}
