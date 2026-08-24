@@ -83,9 +83,6 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
         motorVelocities *= (127.0 / maxVal);
     }
 
-    pros::lcd::print(0, "turningSpeed: %f", turningSpeed);
-    pros::lcd::print(1, "currentHeading: %f", currentHeading);
-
     MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)));
 }
 

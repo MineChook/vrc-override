@@ -75,6 +75,7 @@ void opcontrol(void);
  * You can add C++-only headers here
  */
 //#include <iostream>
+#include "pros/apix.h"
 #endif
 
 #endif  // _PROS_MAIN_H_

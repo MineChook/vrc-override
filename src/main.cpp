@@ -1,9 +1,10 @@
 #include "main.h"
 #include "motion/chassis.h"
 #include "globals.h"
-#include "pros/llemu.hpp"
+#include "autonomous.h"
 #include "pros/misc.h"
 #include "pros/motors.h"
+#include "selector.h"
 
 bool runIntakeAdjustment = true;
 
@@ -55,7 +56,7 @@ void thread() {
 }
 
 void initialize() {
-	pros::lcd::initialize();
+	selector::init();
 	chassis.Calibrate();
 	chassis.GetOdometry().StartUpdating();
 	lift.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
@@ -67,7 +68,17 @@ void competition_initialize() {
 	chassis.Calibrate();
 }
 
-void autonomous() {}
+void autonomous() {
+	if (selector::auton.position == "1") {
+		Auto1();
+	}
+	else if (selector::auton.team == "skills") {
+		Skills();
+	}
+	else {
+		Auto2();
+	}
+}
 
 void opcontrol() {
 	pros::Task threadTask(thread);
