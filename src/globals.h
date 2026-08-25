@@ -22,10 +22,10 @@ inline pros::Imu imu(9);
 inline pros::Rotation verticalTrackingWheel(14);
 inline pros::Rotation horizontalTrackingWheel(15);
 
-inline Odometry odometry(0, 0, OdometryType::X_DRIVE);
+inline Odometry odometry(0, 0, OdometryType::X_DRIVE, 3.25);
 
 inline DriveControllerData driveController(1, 127, 5, ControllerData<double>(0, 0, 0));
-inline ControllerData<Eigen::Vector2d> linearController(0, 0, 0);
-inline ControllerData<double> angularController(0, 0, 0);
+inline ControllerData<Eigen::Vector2d> linearController(5, 0, 12);
+inline ControllerData<double> angularController(5, 0, 2);
 
 inline Chassis chassis(frontLeft, frontRight, backLeft, backRight, odometry, driveController, linearController, angularController);

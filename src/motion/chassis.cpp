@@ -86,7 +86,7 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
     MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)));
 }
 
-void Chassis::MoveToPosition(double targetX, double targetY, double targetHeading, int timeoutSeconds) {
+void Chassis::MoveToPosition(double targetX, double targetY, double targetHeading, double timeoutSeconds) {
     this->m_linearControllerData.setError(Eigen::Vector2d(0, 0));
     this->m_linearControllerData.setIntegral(Eigen::Vector2d(0, 0));
     this->m_linearControllerData.setDerivative(Eigen::Vector2d(0, 0));

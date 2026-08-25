@@ -1,4 +1,5 @@
 #include "main.h"
+#include "liblvgl/llemu.hpp"
 #include "motion/chassis.h"
 #include "globals.h"
 #include "autonomous.h"

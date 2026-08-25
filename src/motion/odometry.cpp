@@ -1,11 +1,14 @@
 #include "odometry.h"
 #include "../globals.h"
+#include "pros/llemu.hpp"
+#include <charconv>
 #include <cmath>
+#include <string>
 #define EIGEN_DONT_VECTORIZE
 #include "Eigen/Core"
 
 double degreesToDistance(double degrees) {
-    return (degrees / 360.0) * (2.0 * M_PI);
+    return (degrees / 360.0) * (chassis.GetOdometry().GetWheelDiameter() / 2 * M_PI);
 }
 
 double Odometry::GetX() {
@@ -20,16 +23,40 @@ double Odometry::GetHeading() {
     return m_heading;
 }
 
+double Odometry::GetWheelDiameter() {
+    return 3.25;
+}
+
 void Odometry::StartUpdating() {
     // Start a new task to update the odometry values
     pros::Task odometryTask([](void* param) {
         Odometry* odometry = static_cast<Odometry*>(param);
+        while (imu.is_calibrating()) {
+            pros::delay(20);
+        }
+
+        if (odometry->m_type == OdometryType::TRACKING_WHEELS) {
+            odometry->m_lastVerticalDegrees = verticalTrackingWheel.get_position();
+            odometry->m_lastHorizontalDegrees = horizontalTrackingWheel.get_position();
+        } else if (odometry->m_type == OdometryType::X_DRIVE) {
+            odometry->m_lastForwardLeftDegrees = chassis.GetFrontLeftMotor().get_position();
+            odometry->m_lastForwardRightDegrees = chassis.GetFrontRightMotor().get_position();
+            odometry->m_lastBackLeftDegrees = chassis.GetBackLeftMotor().get_position();
+            odometry->m_lastBackRightDegrees = chassis.GetBackRightMotor().get_position();
+        }
+
         while (true) {
             if (odometry->m_stopTask) {
                 break; // Exit the loop if the task is stopped
             }
+
+            if (std::isnan(frontLeft.get_position()) || std::isinf(frontLeft.get_position()) || std::isnan(frontRight.get_position()) || std::isinf(frontRight.get_position()) || std::isnan(backLeft.get_position()) || std::isinf(backLeft.get_position()) || std::isnan(backRight.get_position()) || std::isinf(backRight.get_position())) {
+                pros::delay(20);
+                continue;
+            }
+
             double currentHeadingRadians = imu.get_heading() * M_PI / 180.0;
-            double headingRaw = currentHeadingRadians - currentHeadingRadians - odometry->m_lastHeading;
+            double headingRaw = currentHeadingRadians - odometry->m_lastHeading;
 
             if (headingRaw > M_PI) {
                 headingRaw -= 2 * M_PI;
@@ -81,7 +108,14 @@ void Odometry::StartUpdating() {
             Eigen::Vector2d localTranslation(deltaXLocal, deltaYLocal);
             Eigen::Vector2d globalTranslation = globalRotation * localTranslation;
 
-            odometry->SetPosition(globalTranslation.x(), globalTranslation.y(), currentHeadingRadians);
+            odometry->SetPosition(odometry->GetX() + globalTranslation.x(), odometry->GetY() + globalTranslation.y(), currentHeadingRadians);
+            if (std::isnan(odometry->m_x) || std::isinf(odometry->m_x)) {
+                odometry->m_x = 0;
+            }
+            else if (std::isnan(odometry->m_y) || std::isinf(odometry->m_y)) {
+                odometry->m_y = 0;
+            }
+            std::cout << odometry->GetX() << ", " << odometry->GetY() << ", " << odometry->GetHeading() << std::endl;
             odometry->m_lastHeading = currentHeadingRadians;
 
             pros::delay(20); // Delay for 20 milliseconds

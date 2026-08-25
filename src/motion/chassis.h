@@ -1,4 +1,3 @@
-
 #pragma once
 
 #define EIGEN_DONT_VECTORIZE
@@ -8,24 +7,37 @@
 #include "odometry.h"
 
 /**
- * @brief The chassis class is responsible for controlling the robot's drivetrain. It contains methods for moving the robot in different ways, such as arcade and curvature drive, both in robot-centric and field-centric modes. It will also contain the PID code for autonomous motion.
+ * @brief The chassis class is responsible for controlling the robot's drivetrain.
  */
 class Chassis {
 private:
-    pros::Motor m_frontLeft;
-    pros::Motor m_frontRight;
-    pros::Motor m_backLeft;
-    pros::Motor m_backRight;
-
-    Odometry m_odometry;
+    pros::Motor& m_frontLeft;
+    pros::Motor& m_frontRight;
+    pros::Motor& m_backLeft;
+    pros::Motor& m_backRight;
+    Odometry& m_odometry;
 
     DriveControllerData m_driveControllerData;
     ControllerData<Eigen::Vector2d> m_linearControllerData;
     ControllerData<double> m_angularControllerData;
 
 public:
-    Chassis(pros::Motor& frontLeft, pros::Motor& frontRight, pros::Motor& backLeft, pros::Motor& backRight, const Odometry& odometry, const DriveControllerData& driveControllerData, const ControllerData<Eigen::Vector2d>& linearControllerData, const ControllerData<double>& angularControllerData) : m_frontLeft(std::move(frontLeft)), m_frontRight(std::move(frontRight)), m_backLeft(std::move(backLeft)), m_backRight(std::move(backRight)), m_odometry(std::move(odometry)), m_driveControllerData(std::move(driveControllerData)), m_linearControllerData(std::move(linearControllerData)), m_angularControllerData(std::move(angularControllerData)) {
-        
+    Chassis(pros::Motor& frontLeft, 
+            pros::Motor& frontRight, 
+            pros::Motor& backLeft, 
+            pros::Motor& backRight, 
+            Odometry& odometry, 
+            const DriveControllerData& driveControllerData, 
+            const ControllerData<Eigen::Vector2d>& linearControllerData, 
+            const ControllerData<double>& angularControllerData) 
+        : m_frontLeft(frontLeft), 
+          m_frontRight(frontRight), 
+          m_backLeft(backLeft), 
+          m_backRight(backRight), 
+          m_odometry(odometry), 
+          m_driveControllerData(driveControllerData), 
+          m_linearControllerData(linearControllerData), 
+          m_angularControllerData(angularControllerData) {
     }
 
     pros::Motor& GetFrontLeftMotor() {
@@ -47,28 +59,18 @@ public:
     void Calibrate();
 
     /**
-     * @brief Sets the voltage and moves the robot for each motor in the chassis. Used in opcontrol and autonomous.
-     * 
-     * @param frontLeftVoltage The voltage to set for the front left motor.
-     * @param frontRightVoltage The voltage to set for the front right motor.
-     * @param backLeftVoltage The voltage to set for the back left motor.
-     * @param backRightVoltage The voltage to set for the back right motor.
+     * @brief Sets the voltage and moves the robot for each motor in the chassis.
      */
     void MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int backLeftVoltage, int backRightVoltage);
 
     /**
      * @brief Arcade drive that moves depending on if it is field centric or not.
-     * 
-     * @param forwardSpeed The speed to move forward. Positive values move the robot forward, negative values move the robot backward.
-     * @param strafeSpeed The speed to move sideways. Positive values move the robot to the right, negative values move the robot to the left.
-     * @param turningSpeed The speed to turn. Positive values turn the robot clockwise, negative values turn the robot counterclockwise.
-     * @param fieldCentric Whether to use field-centric or robot-centric control.
      */
     void CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed, bool fieldCentric = false);
 
-    void MoveToPosition(double targetX, double targetY, double targetHeading, int timeoutSeconds);
+    void MoveToPosition(double targetX, double targetY, double targetHeading, double timeoutSeconds);
 
     Odometry& GetOdometry() {
         return m_odometry;
     }
-};
+}; 
