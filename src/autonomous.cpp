@@ -2,7 +2,7 @@
 #include "globals.h"
 
 void Auto1() {
-    intake.move_relative(100, 100);
+    intake.move_relative(270, 127);
 }
 
 void Auto2() {
