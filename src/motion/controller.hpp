@@ -82,7 +82,7 @@ public:
 
 class DriveControllerData {
 private:
-    uint8_t m_sensitivity;
+    double m_sensitivity;
     uint8_t m_maxSpeed;
     uint8_t m_deadzone;
     ControllerData<double> m_turningControllerData;
@@ -90,14 +90,14 @@ private:
     double m_targetHeading = 0;
 
 public:
-    DriveControllerData(uint8_t sensitivity, uint8_t maxSpeed, uint8_t deadzone, ControllerData<double> turningControllerData) {
+    DriveControllerData(double sensitivity, uint8_t maxSpeed, uint8_t deadzone, ControllerData<double> turningControllerData) {
         this->m_sensitivity = sensitivity;
         this->m_maxSpeed = maxSpeed;
         this->m_deadzone = deadzone;
         this->m_turningControllerData = turningControllerData;
     }
 
-    uint8_t getSensitivity() const {
+    double getSensitivity() const {
         return m_sensitivity;
     }
 

@@ -24,7 +24,7 @@ double Odometry::GetHeading() {
 }
 
 double Odometry::GetWheelDiameter() {
-    return 3.25;
+    return m_wheelDiameter;
 }
 
 void Odometry::StartUpdating() {
@@ -75,8 +75,8 @@ void Odometry::StartUpdating() {
                 double verticalRaw = degreesToDistance(currentVerticalDegrees - odometry->m_lastVerticalDegrees);
                 double horizontalRaw = degreesToDistance(currentHorizontalDegrees - odometry->m_lastHorizontalDegrees);
 
-                deltaYLocal = verticalRaw - odometry->m_verticalTrackingWheelOffset * headingRaw;
-                deltaXLocal = horizontalRaw - odometry->m_horizontalTrackingWheelOffset * headingRaw;
+                deltaYLocal = verticalRaw /*- odometry->m_verticalTrackingWheelOffset * headingRaw */;
+                deltaXLocal = horizontalRaw /* - odometry->m_horizontalTrackingWheelOffset * headingRaw */;
 
                 odometry->m_lastVerticalDegrees = currentVerticalDegrees;
                 odometry->m_lastHorizontalDegrees = currentHorizontalDegrees;

@@ -6,16 +6,16 @@
 #include "Eigen/Dense"
 
 const Eigen::Matrix<double, 4, 3> kinematicsMatrix = (Eigen::Matrix<double, 4, 3>() << // (forward, strafe, turn)
-    1, 1, 1, // front left
-    -1, 1, 1, // front right
-    1, -1, 1, // back left
-    -1, -1, 1 // back right
+    -1, -1, 1, // front left
+    1, -1, 1, // front right
+    -1, 1, 1, // back left
+    1, 1, 1 // back right
 ).finished();
 
 void Chassis::Calibrate() {
     imu.reset(true);
 
-    m_odometry.SetPosition(0, 0, 0);
+    m_odometry.SetPosition(0.0, 0.0, 0.0);
 
     controller1.rumble("- . -");
 }

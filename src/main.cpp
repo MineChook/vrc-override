@@ -20,14 +20,12 @@ void releasePin() {
 }
 
 void clampPin() {
-	runIntakeAdjustment = false;
-	intake.move(127);
-	scoringPiston.set_value(false);
-	pros::delay(250);
-	scoringPiston.set_value(true);
-	pros::delay(100);
-	intake.move(0);
-	runIntakeAdjustment = true;
+	if (distance.get_distance() < 50) {
+		clamp.retract();
+	}
+	else {
+		clamp.extend();
+	}
 }
 
 void thread() {
@@ -37,7 +35,7 @@ void thread() {
 				lift.move(127);
 			} 
 			else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-				lift.move(-63);
+				lift.move(-80);
 			}
 			else {
 				lift.move(0);
@@ -98,10 +96,10 @@ void opcontrol() {
 			}
 		}
 		if (controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) > 80) {
-			scoringPiston.set_value(true);
+			clamp.set_value(true);
 		}
 		else if (controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) < -80) {
-			scoringPiston.set_value(false);
+			clamp.set_value(false);
 		}
 		pros::delay(20);
 	}
