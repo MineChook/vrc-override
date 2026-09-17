@@ -31,10 +31,10 @@ void clampPin() {
 void thread() {
 	while (true) {
 		if (runIntakeAdjustment) {
-			if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+			if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
 				lift.move(127);
 			} 
-			else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+			else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
 				lift.move(-80);
 			}
 			else {
@@ -95,10 +95,10 @@ void opcontrol() {
 				pros::delay(20);
 			}
 		}
-		if (controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) > 80) {
+		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			clamp.set_value(true);
 		}
-		else if (controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) < -80) {
+		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			clamp.set_value(false);
 		}
 		pros::delay(20);

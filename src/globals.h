@@ -9,6 +9,7 @@
 #include "pros/rotation.hpp"
 
 inline pros::Controller controller1(pros::E_CONTROLLER_MASTER);
+inline pros::Controller controller2(pros::E_CONTROLLER_MASTER);
 
 inline pros::Motor frontLeft(2, pros::MotorGears::blue, pros::MotorEncoderUnits::degrees);
 inline pros::Motor frontRight(10, pros::MotorGears::blue, pros::MotorEncoderUnits::degrees);
