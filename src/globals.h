@@ -6,10 +6,11 @@
 #include "pros/adi.hpp"
 #include "pros/distance.hpp"
 #include "pros/imu.hpp"
+#include "pros/misc.h"
 #include "pros/rotation.hpp"
 
 inline pros::Controller controller1(pros::E_CONTROLLER_MASTER);
-inline pros::Controller controller2(pros::E_CONTROLLER_MASTER);
+inline pros::Controller controller2(pros::E_CONTROLLER_PARTNER);
 
 inline pros::Motor frontLeft(2, pros::MotorGears::blue, pros::MotorEncoderUnits::degrees);
 inline pros::Motor frontRight(10, pros::MotorGears::blue, pros::MotorEncoderUnits::degrees);
@@ -22,10 +23,11 @@ inline pros::Distance distance(15);
 inline pros::adi::Pneumatics clamp('H', false);
 
 inline pros::Imu imu(7);
-inline pros::Rotation verticalTrackingWheel(-3);
+inline pros::Rotation leftVerticalTrackingWheel(3);
+inline pros::Rotation rightVerticalTrackingWheel(-4);
 inline pros::Rotation horizontalTrackingWheel(19);
 
-inline Odometry odometry(3.54, 0, OdometryType::TRACKING_WHEELS, 2);
+inline Odometry odometry(0, 0, 0, 3.25, 2);
 
 inline DriveControllerData driveController(0.85, 127, 5, ControllerData<double>(0, 0, 0));
 inline ControllerData<Eigen::Vector2d> linearController(10, 0, 12);
