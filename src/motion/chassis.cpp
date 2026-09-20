@@ -6,15 +6,13 @@
 #include "Eigen/Dense"
 
 const Eigen::Matrix<double, 4, 3> kinematicsMatrix = (Eigen::Matrix<double, 4, 3>() << // (forward, strafe, turn)
-    -1, -1, 1, // front left
-    1, -1, 1, // front right
-    -1, 1, 1, // back left
-    1, 1, 1 // back right
+    1, 1, 1, // front left
+    -1, 1, 1, // front right
+    1, -1, 1, // back left
+    -1, -1, 1 // back right
 ).finished();
 
 void Chassis::Calibrate() {
-    imu.reset(true);
-
     m_odometry.SetPosition(0.0, 0.0, 0.0);
 
     controller1.rumble("- . -");
@@ -29,13 +27,13 @@ void Chassis::MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int backL
 
 void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed, bool fieldCentric) {
 
-    double currentHeading = imu.get_heading();
+    //double currentHeading = imu.get_heading();
 
     if(abs(strafeSpeed) < this->m_driveControllerData.getDeadzone()) strafeSpeed = 0;
     if(abs(forwardSpeed) < this->m_driveControllerData.getDeadzone()) forwardSpeed = 0;
     if(abs(turningSpeed) < this->m_driveControllerData.getDeadzone()) {
 
-        this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTargetHeading() - currentHeading);
+        this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTargetHeading() /* -currentHeading*/);
 
         if (this->m_driveControllerData.getTurningControllerData().getError() > 180) {
             this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTurningControllerData().getError() - 360);
@@ -51,7 +49,7 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
         turningSpeed = this->m_driveControllerData.getTurningControllerData().getKp() * this->m_driveControllerData.getTurningControllerData().getError() + this->m_driveControllerData.getTurningControllerData().getKi() * this->m_driveControllerData.getTurningControllerData().getIntegral() + this->m_driveControllerData.getTurningControllerData().getKd() * this->m_driveControllerData.getTurningControllerData().getDerivative();
     }
     else {
-        this->m_driveControllerData.setTargetHeading(currentHeading);
+        //this->m_driveControllerData.setTargetHeading(currentHeading);
         this->m_driveControllerData.getTurningControllerData().setError(0);
         this->m_driveControllerData.getTurningControllerData().setIntegral(0);
         this->m_driveControllerData.getTurningControllerData().setDerivative(0);
@@ -63,7 +61,7 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
     double vx = strafeSpeed;
 
     if (fieldCentric) {
-        double thetaHeading = currentHeading * M_PI / 180;
+        double thetaHeading = /*currentHeading **/ M_PI / 180;
 
         Eigen::Matrix2d rotation;
         rotation << std::cos(thetaHeading), std::sin(thetaHeading), -std::sin(thetaHeading), std::cos(thetaHeading);

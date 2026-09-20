@@ -8,10 +8,12 @@
 #include "Eigen/Core"
 
 double Odometry::DegreesToDistance(double degrees, uint8_t wheelType) {
+    double realDegrees = degrees / 100.0; // Convert centidegrees to degrees
+
     if (wheelType == 0) {
-        return (degrees / 360.0) * (m_verticalWheelDiameter * M_PI);
+        return (realDegrees / 360.0) * (m_verticalWheelDiameter * M_PI);
     } else {
-        return (degrees / 360.0) * (m_horizontalWheelDiameter * M_PI);
+        return (realDegrees / 360.0) * (m_horizontalWheelDiameter * M_PI);
     }
 }
 
@@ -32,16 +34,17 @@ void Odometry::StartUpdating() {
     pros::Task odometryTask([](void* param) {
         Odometry* odometry = static_cast<Odometry*>(param);
         
-            odometry->m_lastLeftVerticalDegrees = leftVerticalTrackingWheel.get_position();
-            odometry->m_lastRightVerticalDegrees = rightVerticalTrackingWheel.get_position();
-            odometry->m_lastHorizontalDegrees = horizontalTrackingWheel.get_position();
+        odometry->m_lastLeftVerticalDegrees = leftVerticalTrackingWheel.get_position();
+        odometry->m_lastRightVerticalDegrees = rightVerticalTrackingWheel.get_position();
+        odometry->m_lastHorizontalDegrees = horizontalTrackingWheel.get_position();
 
         while (true) {
             if (odometry->m_stopTask) {
                 break; // Exit the loop if the task is stopped
             }
 
-            if (std::isnan(frontLeft.get_position()) || std::isinf(frontLeft.get_position()) || std::isnan(frontRight.get_position()) || std::isinf(frontRight.get_position()) || std::isnan(backLeft.get_position()) || std::isinf(backLeft.get_position()) || std::isnan(backRight.get_position()) || std::isinf(backRight.get_position())) {
+            if (std::isnan(leftVerticalTrackingWheel.get_position()) || std::isinf(leftVerticalTrackingWheel.get_position()) || std::isnan(rightVerticalTrackingWheel.get_position()) || std::isinf(rightVerticalTrackingWheel.get_position()) || std::isnan(horizontalTrackingWheel.get_position()) || std::isinf(horizontalTrackingWheel.get_position())) {
+                controller2.set_text(1, 0, "Error: Invalid sensor reading");
                 pros::delay(20);
                 continue;
             }
@@ -90,7 +93,7 @@ void Odometry::StartUpdating() {
             else if (std::isnan(odometry->m_y) || std::isinf(odometry->m_y)) {
                 odometry->m_y = 0;
             }
-            std::cout << odometry->GetX() << ", " << odometry->GetY() << ", " << odometry->GetHeading() << std::endl;
+            controller2.set_text(0, 0, "X: " + std::to_string(odometry->m_x) + " Y: " + std::to_string(odometry->m_y) + " Heading: " + std::to_string(odometry->m_heading));
 
             pros::delay(20); // Delay for 20 milliseconds
         }

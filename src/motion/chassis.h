@@ -22,6 +22,18 @@ private:
     ControllerData<double> m_angularControllerData;
 
 public:
+    /**
+     * @brief The chassis object constructor
+     * 
+     * @param frontLeft 
+     * @param frontRight 
+     * @param backLeft 
+     * @param backRight 
+     * @param odometry 
+     * @param driveControllerData 
+     * @param linearControllerData 
+     * @param angularControllerData 
+     */
     Chassis(pros::Motor& frontLeft, 
             pros::Motor& frontRight, 
             pros::Motor& backLeft, 
@@ -40,22 +52,46 @@ public:
           m_angularControllerData(angularControllerData) {
     }
 
+    /**
+     * @brief Get the Front Left Motor object
+     * 
+     * @return pros::Motor& 
+     */
     pros::Motor& GetFrontLeftMotor() {
         return m_frontLeft;
     }
 
+    /**
+     * @brief Get the Front Right Motor object
+     * 
+     * @return pros::Motor& 
+     */
     pros::Motor& GetFrontRightMotor() {
         return m_frontRight;
     }
 
+    /**
+     * @brief Get the Back Left Motor object
+     * 
+     * @return pros::Motor& 
+     */
     pros::Motor& GetBackLeftMotor() {
         return m_backLeft;
     }
 
+    /**
+     * @brief Get the Back Right Motor object
+     * 
+     * @return pros::Motor& 
+     */
     pros::Motor& GetBackRightMotor() {
         return m_backRight;
     }
 
+    /**
+     * @brief Calibrates the Chassis
+     * 
+     */
     void Calibrate();
 
     /**
@@ -68,8 +104,21 @@ public:
      */
     void CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed, bool fieldCentric = false);
 
+    /**
+     * @brief Moves the robot to the chosen position and orientation
+     * 
+     * @param targetX 
+     * @param targetY 
+     * @param targetHeading 
+     * @param timeoutSeconds 
+     */
     void MoveToPosition(double targetX, double targetY, double targetHeading, double timeoutSeconds);
 
+    /**
+     * @brief Get the Odometry object
+     * 
+     * @return Odometry& 
+     */
     Odometry& GetOdometry() {
         return m_odometry;
     }
