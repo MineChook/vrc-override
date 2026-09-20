@@ -108,4 +108,5 @@ void Odometry::SetPosition(double x, double y, double heading) {
     m_x = x;
     m_y = y;
     m_heading = heading;
+    m_lastHeading = heading;
 }

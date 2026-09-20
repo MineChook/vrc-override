@@ -7,53 +7,6 @@
 #include "pros/motors.h"
 #include "selector.h"
 
-bool runIntakeAdjustment = true;
-
-void releasePin() {
-	runIntakeAdjustment = false;
-	intake.move(-63);
-	lift.move(127);
-	pros::delay(500);
-	intake.move(0);
-	lift.move(0);
-	runIntakeAdjustment = true;
-}
-
-void clampPin() {
-	if (distance.get_distance() < 50) {
-		clamp.retract();
-	}
-	else {
-		clamp.extend();
-	}
-}
-
-void thread() {
-	while (true) {
-		if (runIntakeAdjustment) {
-			if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-				lift.move(127);
-			} 
-			else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-				lift.move(-80);
-			}
-			else {
-				lift.move(0);
-			}
-			if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-				intake.move(127);
-			}
-			else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-				intake.move(-127);
-			}
-			else {
-				intake.move(0);
-			}
-		}
-		pros::delay(20);
-	}
-}
-
 void initialize() {
 	selector::init();
 	chassis.Calibrate();
@@ -71,7 +24,7 @@ void autonomous() {
 	if (selector::auton.position == "1") {
 		Auto1();
 	}
-	else if (selector::auton.team == "skills") {
+	else if (selector::auton.team == "skill") {
 		Skills();
 	}
 	else {
@@ -80,26 +33,34 @@ void autonomous() {
 }
 
 void opcontrol() {
-	pros::Task threadTask(thread);
 	while (true) {
 		chassis.CentricArcade(controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X), controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), false);
-		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-			pros::Task releasePinTask(releasePin);
-			while (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-				pros::delay(20);
-			}
+		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+			intake.move(127);
 		}
-		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-			pros::Task clampPinTask(clampPin);
-			while (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-				pros::delay(20);
-			}
+		else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+			intake.move(-127);
 		}
+		else {
+			intake.move(0);
+		}
+
+
 		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			clamp.set_value(true);
 		}
 		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			clamp.set_value(false);
+		}
+		
+		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+			lift.move(127);
+		} 
+		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+			lift.move(-80);
+		}
+		else {
+			lift.move(0);
 		}
 		pros::delay(20);
 	}

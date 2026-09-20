@@ -192,7 +192,7 @@ void selector::init() {
         }
         else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
             auton.team = "solo";
-            
+            confirmed = true;
         }
     }
 }
