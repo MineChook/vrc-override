@@ -24,7 +24,7 @@ void autonomous() {
 	if (selector::auton.position == "1") {
 		Auto1();
 	}
-	else if (selector::auton.team == "skill") {
+	else if (selector::auton.team == "skills") {
 		Skills();
 	}
 	else {

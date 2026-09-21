@@ -187,7 +187,7 @@ void selector::init() {
             confirmed = true;
         }
         else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-            auton.team = "skill";
+            auton.team = "skills";
             confirmed = true;
         }
         else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
