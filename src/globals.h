@@ -29,7 +29,7 @@ inline pros::Rotation horizontalTrackingWheel(-12);
 inline Odometry odometry(6.5, 6.5, 0.0001, 3.25, 2);
 
 inline DriveControllerData driveController(0.85, 127, 5, ControllerData<double>(0, 0, 0));
-inline ControllerData<Eigen::Vector2d> linearController(10, 0, 12);
-inline ControllerData<double> angularController(5, 0, 2);
+inline ControllerData<Eigen::Vector2d> linearController(0, 0, 0);
+inline ControllerData<double> angularController(4, 0, 0);
 
 inline Chassis chassis(frontLeft, frontRight, backLeft, backRight, odometry, driveController, linearController, angularController);

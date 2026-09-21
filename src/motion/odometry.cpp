@@ -17,6 +17,12 @@ double Odometry::DegreesToDistance(double degrees, uint8_t wheelType) {
     }
 }
 
+float Round(float var)
+{
+    float value = (int)(var * 100 + .5);
+    return (float)value / 100;
+}
+
 double Odometry::GetX() {
     return m_x;
 }
@@ -93,7 +99,7 @@ void Odometry::StartUpdating() {
             else if (std::isnan(odometry->m_y) || std::isinf(odometry->m_y)) {
                 odometry->m_y = 0;
             }
-            controller2.set_text(0, 0, "X: " + std::to_string(odometry->m_x) + " Y: " + std::to_string(odometry->m_y) + " Heading: " + std::to_string(odometry->m_heading));
+            controller2.set_text(0, 0, "X: " + std::to_string(Round(odometry->m_x)) + " Y: " + std::to_string(Round(odometry->m_y)) + " H: " + std::to_string(Round(odometry->m_heading * 180 / M_PI)));
 
             pros::delay(20); // Delay for 20 milliseconds
         }

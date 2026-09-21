@@ -97,7 +97,7 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
     int timeoutMilliseconds = timeoutSeconds * 1000;
 
     while (timeoutMilliseconds > 0) {
-        double currentHeading = m_odometry.GetHeading();
+        double currentHeading = m_odometry.GetHeading() * 180 / M_PI;
 
         double xError = targetX - m_odometry.GetX();
         double yError = targetY - m_odometry.GetY();

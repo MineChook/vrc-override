@@ -1,5 +1,6 @@
 #include "autonomous.h"
 #include "globals.h"
+#include "pros/screen.hpp"
 
 void Auto1() {
     intake.move_relative(270, 127);
@@ -13,5 +14,6 @@ void Auto2() {
 }
 
 void Skills() {
-    chassis.MoveToPosition(24, 0, 0, 100);
+    controller1.set_text(1, 0, "skills ran i guess");
+    chassis.MoveToPosition(0, 0, 90, 100);
 }

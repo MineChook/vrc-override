@@ -21,6 +21,7 @@ void competition_initialize() {
 }
 
 void autonomous() {
+	controller1.print(1, 0, "auto ran I guess");
 	if (selector::auton.position == "1") {
 		Auto1();
 	}
