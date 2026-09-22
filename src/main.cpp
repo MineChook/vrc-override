@@ -9,9 +9,13 @@
 
 void initialize() {
 	selector::init();
+	controller1.set_text(1, 0, "test1");
 	chassis.Calibrate();
+	controller1.set_text(1, 0, "test2");
 	chassis.GetOdometry().StartUpdating();
+	controller1.set_text(1, 0, "test3");
 	lift.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	controller1.set_text(1, 0, "test4");
 }
 
 void disabled() {}
@@ -21,7 +25,6 @@ void competition_initialize() {
 }
 
 void autonomous() {
-	controller1.print(1, 0, "auto ran I guess");
 	if (selector::auton.position == "1") {
 		Auto1();
 	}

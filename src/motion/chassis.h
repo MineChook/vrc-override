@@ -34,22 +34,8 @@ public:
      * @param linearControllerData 
      * @param angularControllerData 
      */
-    Chassis(pros::Motor& frontLeft, 
-            pros::Motor& frontRight, 
-            pros::Motor& backLeft, 
-            pros::Motor& backRight, 
-            Odometry& odometry, 
-            const DriveControllerData& driveControllerData, 
-            const ControllerData<Eigen::Vector2d>& linearControllerData, 
-            const ControllerData<double>& angularControllerData) 
-        : m_frontLeft(frontLeft), 
-          m_frontRight(frontRight), 
-          m_backLeft(backLeft), 
-          m_backRight(backRight), 
-          m_odometry(odometry), 
-          m_driveControllerData(driveControllerData), 
-          m_linearControllerData(linearControllerData), 
-          m_angularControllerData(angularControllerData) {
+    Chassis(pros::Motor& frontLeft, pros::Motor& frontRight, pros::Motor& backLeft, pros::Motor& backRight, 
+            Odometry& odometry, const DriveControllerData& driveControllerData, const ControllerData<Eigen::Vector2d>& linearControllerData, const ControllerData<double>& angularControllerData) : m_frontLeft(frontLeft), m_frontRight(frontRight), m_backLeft(backLeft), m_backRight(backRight), m_odometry(odometry), m_driveControllerData(driveControllerData), m_linearControllerData(linearControllerData), m_angularControllerData(angularControllerData) {
     }
 
     /**

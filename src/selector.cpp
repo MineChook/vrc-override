@@ -58,6 +58,7 @@ static void blue2(lv_event_t * event) {
 
 static void skills(lv_event_t * event) {
     selector::auton.team = "skills";
+    selector::auton.position = "null";
     confirmed = true;
 }
 
@@ -188,6 +189,7 @@ void selector::init() {
         }
         else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
             auton.team = "skills";
+            auton.position = "null";
             confirmed = true;
         }
         else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {

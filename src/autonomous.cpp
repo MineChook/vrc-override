@@ -14,6 +14,6 @@ void Auto2() {
 }
 
 void Skills() {
-    controller1.set_text(1, 0, "skills ran i guess");
+    controller1.print(1, 0, "test");
     chassis.MoveToPosition(0, 0, 90, 100);
 }
