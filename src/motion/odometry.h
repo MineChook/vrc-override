@@ -1,11 +1,12 @@
 #pragma once
 
+#define EIGEN_DONT_VECTORIZE
+#include "Eigen/Dense"
 #include <cstdint>
 
 class Odometry {
 private:
-    double m_x = 0;
-    double m_y = 0;
+    Eigen::Vector2d m_position;
     double m_heading = 0;
     double m_lastLeftVerticalDegrees = 0;
     double m_lastRightVerticalDegrees = 0;
@@ -33,7 +34,9 @@ public:
      * @param verticalWheelDiameter 
      * @param horizontalWheelDiameter 
      */
-    Odometry(double verticalLeftTrackingWheelOffset = 0, double verticalRightTrackingWheelOffset = 0, double horizontalTrackingWheelOffset = 0, double verticalWheelDiameter = 3.25, double horizontalWheelDiameter = 3.25) : m_verticalLeftTrackingWheelOffset(verticalLeftTrackingWheelOffset), m_verticalRightTrackingWheelOffset(verticalRightTrackingWheelOffset), m_horizontalTrackingWheelOffset(horizontalTrackingWheelOffset), m_verticalWheelDiameter(verticalWheelDiameter), m_horizontalWheelDiameter(horizontalWheelDiameter) {};
+    Odometry(double verticalLeftTrackingWheelOffset = 0, double verticalRightTrackingWheelOffset = 0, double horizontalTrackingWheelOffset = 0, double verticalWheelDiameter = 3.25, double horizontalWheelDiameter = 3.25) : m_verticalLeftTrackingWheelOffset(verticalLeftTrackingWheelOffset), m_verticalRightTrackingWheelOffset(verticalRightTrackingWheelOffset), m_horizontalTrackingWheelOffset(horizontalTrackingWheelOffset), m_verticalWheelDiameter(verticalWheelDiameter), m_horizontalWheelDiameter(horizontalWheelDiameter) {
+        m_position << 0, 0;
+    };
     
     /**
      * @brief Starts the Odometry Update that keeps track of the robot's position
@@ -48,18 +51,11 @@ public:
     void StopUpdating();
 
     /**
-     * @brief Get the X Position
+     * @brief Get the Position of the Robot
      * 
-     * @return Return the X Position of the Robot in Inches
+     * @return The position as a Eigen::Vector2d 
      */
-    double GetX();
-
-    /**
-     * @brief Get the Y Position
-     * 
-     * @return Return the Y Position of the Robot in Inches
-     */
-    double GetY();
+    Eigen::Vector2d GetPosition();
 
     /**
      * @brief Get the Heading Position

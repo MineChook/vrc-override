@@ -1,5 +1,6 @@
 #include "chassis.h"
 #include "../globals.h"
+#include "Eigen/Core"
 #include "pros/misc.h"
 #include <cmath>
 #define EIGEN_DONT_VECTORIZE
@@ -98,25 +99,24 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
 
     int timeoutMilliseconds = timeoutSeconds * 1000;
 
+    Eigen::Vector2d target(targetX, targetY);
+
     while (timeoutMilliseconds > 0) {
         double currentHeading = m_odometry.GetHeading() * 180 / M_PI;
-
-        double xError = targetX - m_odometry.GetX();
-        double yError = targetY - m_odometry.GetY();
+        
+        Eigen::Vector2d positionError(target - m_odometry.GetPosition());
         double headingError = targetHeading - currentHeading;
 
-        while (headingError > M_PI) {
-            headingError -= 2 * M_PI;
-        }
-        while (headingError < -M_PI) {
-            headingError += 2 * M_PI;
+        if (headingError > 180) {
+            headingError -= 360;
+        } else if (headingError < -180) {
+            headingError += 360;
         }
 
         Eigen::Matrix2d rotation;
         rotation <<  std::cos(currentHeading), -std::sin(currentHeading), std::sin(currentHeading),  std::cos(currentHeading);
 
-        Eigen::Vector2d globalError(xError, yError);
-        Eigen::Vector2d translationError = rotation * globalError;
+        Eigen::Vector2d translationError = rotation * positionError;
 
         double distanceError = std::hypot(translationError.x(), translationError.y());
         if (distanceError < m_linearControllerData.getDistanceTolerance() && std::abs(headingError) < m_angularControllerData.getHeadingTolerance()) {

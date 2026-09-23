@@ -23,12 +23,8 @@ float Round(float var)
     return (float)value / 100;
 }
 
-double Odometry::GetX() {
-    return m_x;
-}
-
-double Odometry::GetY() {
-    return m_y;
+Eigen::Vector2d Odometry::GetPosition() {
+    return m_position;
 }
 
 double Odometry::GetHeading() {
@@ -89,18 +85,18 @@ void Odometry::StartUpdating() {
             Eigen::Vector2d localTranslation(deltaXLocal, deltaYLocal);
             Eigen::Vector2d globalTranslation = globalRotation * localTranslation;
 
-            odometry->SetPosition(odometry->GetX() + globalTranslation.x(), odometry->GetY() + globalTranslation.y(), currentHeadingRadians);
+            odometry->SetPosition(odometry->m_position[0] + globalTranslation.x(), odometry->m_position[1] + globalTranslation.y(), currentHeadingRadians);
 
             odometry->m_lastHeading = currentHeadingRadians;
 
-            if (std::isnan(odometry->m_x) || std::isinf(odometry->m_x)) {
-                odometry->m_x = 0;
+            if (std::isnan(odometry->m_position[0]) || std::isinf(odometry->m_position[0])) {
+                odometry->m_position[0] = 0;
             }
-            else if (std::isnan(odometry->m_y) || std::isinf(odometry->m_y)) {
-                odometry->m_y = 0;
+            if (std::isnan(odometry->m_position[1]) || std::isinf(odometry->m_position[1])) {
+                odometry->m_position[1] = 0;
             }
-            controller2.set_text(0, 0, "X: " + std::to_string(Round(odometry->m_x)) + " Y: " + std::to_string(Round(odometry->m_y)) + " H: " + std::to_string(Round(odometry->m_heading * 180 / M_PI)));
 
+            controller2.set_text(0, 0, "X: " + std::to_string(Round(odometry->m_position[0])) + " Y: " + std::to_string(Round(odometry->m_position[1])) + " H: " + std::to_string(Round(odometry->m_heading * 180 / M_PI)));
             pros::delay(20); // Delay for 20 milliseconds
         }
     }, this);
@@ -111,8 +107,7 @@ void Odometry::StopUpdating() {
 }
 
 void Odometry::SetPosition(double x, double y, double heading) {
-    m_x = x;
-    m_y = y;
+    m_position << x, y;
     m_heading = heading;
     m_lastHeading = heading;
 }

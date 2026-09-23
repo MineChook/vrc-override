@@ -38,7 +38,7 @@ void autonomous() {
 
 void opcontrol() {
 	while (true) {
-		chassis.CentricArcade(controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X), controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), false);
+		chassis.CentricArcade(-controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), -controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X), controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), false);
 		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			intake.move(127);
 		}

@@ -109,7 +109,7 @@ public:
         return m_deadzone;
     }
 
-    ControllerData<double> getTurningControllerData() const {
+    ControllerData<double>& getTurningControllerData() {
         return m_turningControllerData;
     }
 
