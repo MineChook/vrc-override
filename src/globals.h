@@ -19,6 +19,7 @@ inline pros::Motor backRight(4, pros::MotorGears::blue, pros::MotorEncoderUnits:
 
 inline pros::MotorGroup lift({1, -5}, pros::MotorGear::green, pros::MotorUnits::degrees);
 inline pros::MotorGroup intake({11, 12, 18}, pros::MotorGear::blue, pros::MotorUnits::degrees);
+inline pros::Motor toggles(20, pros::MotorGears::rpm_200, pros::MotorUnits::degrees);
 inline pros::Distance distance(15);
 inline pros::adi::Pneumatics clamp('H', false);
 
@@ -30,6 +31,6 @@ inline Odometry odometry(6.5, 6.5, 0.0000001, 3.25, 2);
 
 inline DriveControllerData driveController(0.5, 127, 5, ControllerData<double>(1, 0, 0));
 inline ControllerData<Eigen::Vector2d> linearController(0, 0, 0);
-inline ControllerData<double> angularController(0.5, 0, 25);
+inline ControllerData<double> angularController(0.2, 0, 4);
 
 inline Chassis chassis(frontLeft, frontRight, backLeft, backRight, odometry, driveController, linearController, angularController);

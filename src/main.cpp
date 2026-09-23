@@ -5,7 +5,25 @@
 #include "autonomous.h"
 #include "pros/misc.h"
 #include "pros/motors.h"
+#include "pros/rtos.hpp"
 #include "selector.h"
+
+void toggleMech() {
+	while (true) {
+		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+			toggles.move_relative(135, 127);
+			while (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+				pros::delay(50);
+			}
+		}
+		else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+			toggles.move_relative(295, 127);
+			while (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+				pros::delay(50);
+			}
+		}
+	}
+}
 
 void initialize() {
 	selector::init();
@@ -33,6 +51,7 @@ void autonomous() {
 }
 
 void opcontrol() {
+	pros::Task thread(toggleMech);
 	while (true) {
 		chassis.CentricArcade(-controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), -controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X), controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), false);
 		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
@@ -44,7 +63,6 @@ void opcontrol() {
 		else {
 			intake.move(0);
 		}
-
 
 		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			clamp.set_value(true);
