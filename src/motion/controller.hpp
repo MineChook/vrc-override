@@ -86,7 +86,7 @@ private:
     uint8_t m_maxSpeed;
     uint8_t m_deadzone;
     ControllerData<double> m_turningControllerData;
-
+    double m_turnMultiplication = 1;
     double m_targetHeading = 0;
 
 public:
@@ -119,5 +119,13 @@ public:
 
     void setTargetHeading(double targetHeading) {
         m_targetHeading = targetHeading;
+    }
+
+    double GetTurnMultiplication() {
+        return m_turnMultiplication;
+    }
+
+    void SetTurnMultiplication(double turnMultiplication) {
+        m_turnMultiplication = turnMultiplication;
     }
 };

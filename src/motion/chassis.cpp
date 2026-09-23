@@ -50,6 +50,8 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
         this->m_driveControllerData.getTurningControllerData().setLastError(this->m_driveControllerData.getTurningControllerData().getError());
 
         turningSpeed = this->m_driveControllerData.getTurningControllerData().getKp() * this->m_driveControllerData.getTurningControllerData().getError() + this->m_driveControllerData.getTurningControllerData().getKi() * this->m_driveControllerData.getTurningControllerData().getIntegral() + this->m_driveControllerData.getTurningControllerData().getKd() * this->m_driveControllerData.getTurningControllerData().getDerivative();
+
+        this->m_driveControllerData.SetTurnMultiplication(1);
     }
     else {
         this->m_driveControllerData.setTargetHeading(currentHeading);
@@ -57,7 +59,9 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
         this->m_driveControllerData.getTurningControllerData().setIntegral(0);
         this->m_driveControllerData.getTurningControllerData().setDerivative(0);
         this->m_driveControllerData.getTurningControllerData().setLastError(0);
-        turningSpeed *= this->m_driveControllerData.getSensitivity();
+        turningSpeed *= this->m_driveControllerData.getSensitivity() * this->m_driveControllerData.GetTurnMultiplication();
+
+        this->m_driveControllerData.SetTurnMultiplication(this->m_driveControllerData.GetTurnMultiplication() + 0.03);
     }
 
     double vy = forwardSpeed;
