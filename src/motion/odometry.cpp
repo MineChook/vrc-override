@@ -32,6 +32,7 @@ double Odometry::GetHeading() {
 }
 
 void Odometry::StartUpdating() {
+    this->m_stopTask = false;
     // Start a new task to update the odometry values
     pros::Task odometryTask([](void* param) {
         Odometry* odometry = static_cast<Odometry*>(param);

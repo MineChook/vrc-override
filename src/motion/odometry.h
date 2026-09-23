@@ -17,7 +17,7 @@ private:
     double m_horizontalTrackingWheelOffset = 0;
     double m_verticalWheelDiameter = 3.25;
     double m_horizontalWheelDiameter = 3.25;
-    bool m_stopTask = false;
+    bool m_stopTask = true;
 
     double m_lastForwardLeftDegrees = 0;
     double m_lastForwardRightDegrees = 0;

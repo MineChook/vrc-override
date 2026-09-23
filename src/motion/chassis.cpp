@@ -14,11 +14,7 @@ const Eigen::Matrix<double, 4, 3> kinematicsMatrix = (Eigen::Matrix<double, 4, 3
 ).finished();
 
 void Chassis::Calibrate() {
-    pros::delay(50);
-
     m_odometry.SetPosition(0.0, 0.0, 0.0);
-
-    controller1.rumble("- . -");
 }
 
 void Chassis::MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int backLeftVoltage, int backRightVoltage) {
