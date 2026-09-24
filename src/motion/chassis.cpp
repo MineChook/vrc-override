@@ -26,7 +26,7 @@ void Chassis::MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int backL
 
 void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed, bool fieldCentric) {
 
-    double currentHeading = m_odometry.GetHeading();
+    double currentHeading = m_odometry.GetHeading() * 180 / M_PI;
 
     if(abs(strafeSpeed) < this->m_driveControllerData.getDeadzone()) strafeSpeed = 0;
     if(abs(forwardSpeed) < this->m_driveControllerData.getDeadzone()) forwardSpeed = 0;
@@ -64,10 +64,8 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
     double vx = strafeSpeed;
 
     if (fieldCentric) {
-        double thetaHeading = currentHeading * M_PI / 180;
-
         Eigen::Matrix2d rotation;
-        rotation << std::cos(thetaHeading), std::sin(thetaHeading), -std::sin(thetaHeading), std::cos(thetaHeading);
+        rotation << std::cos(currentHeading), std::sin(currentHeading), -std::sin(currentHeading), std::cos(currentHeading);
 
         Eigen::Vector2d fieldInput(vy, vx);
         Eigen::Vector2d robotInput = rotation * fieldInput;
@@ -98,11 +96,24 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
     this->m_angularControllerData.setLastError(0);
 
     int timeoutMilliseconds = timeoutSeconds * 1000;
+    double dt = 0.02; // 20 milliseconds
+
+    double currentHeadingRadians = m_odometry.GetHeading();
+    double currentHeading = currentHeadingRadians * 180 / M_PI;
+
+    this->m_angularControllerData.setLastError(targetHeading - currentHeading);
+
+    if (this->m_angularControllerData.getLastError() > 180) {
+        this->m_angularControllerData.setLastError(this->m_angularControllerData.getLastError() - 360);
+    } else if (this->m_angularControllerData.getLastError() < -180) {
+        this->m_angularControllerData.setLastError(this->m_angularControllerData.getLastError() + 360);
+    }
 
     Eigen::Vector2d target(targetX, targetY);
 
     while (timeoutMilliseconds > 0) {
-        double currentHeading = m_odometry.GetHeading() * 180 / M_PI;
+        currentHeadingRadians = m_odometry.GetHeading();
+        currentHeading = currentHeadingRadians * 180 / M_PI;
         
         Eigen::Vector2d positionError(target - m_odometry.GetPosition());
         double headingError = targetHeading - currentHeading;
@@ -114,7 +125,7 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         }
 
         Eigen::Matrix2d rotation;
-        rotation <<  std::cos(currentHeading), -std::sin(currentHeading), std::sin(currentHeading),  std::cos(currentHeading);
+        rotation <<  std::cos(currentHeadingRadians), -std::sin(currentHeadingRadians), std::sin(currentHeadingRadians),  std::cos(currentHeadingRadians);
 
         Eigen::Vector2d translationError = rotation * positionError;
 
@@ -125,19 +136,30 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         }
 
         m_linearControllerData.setError(translationError);
-        m_linearControllerData.setIntegral(m_linearControllerData.getIntegral() + translationError);
-        m_linearControllerData.setDerivative(translationError - m_linearControllerData.getLastError());
+        m_linearControllerData.setIntegral(m_linearControllerData.getIntegral() + translationError * dt);
+        m_linearControllerData.setDerivative((translationError - m_linearControllerData.getLastError()) / dt);
 
         double vx = m_linearControllerData.getKp() * m_linearControllerData.getError().x() + m_linearControllerData.getKi() * m_linearControllerData.getIntegral().x() + m_linearControllerData.getKd() * m_linearControllerData.getDerivative().x();
         double vy = m_linearControllerData.getKp() * m_linearControllerData.getError().y() + m_linearControllerData.getKi() * m_linearControllerData.getIntegral().y() + m_linearControllerData.getKd() * m_linearControllerData.getDerivative().y();
 
         m_angularControllerData.setError(headingError);
-        m_angularControllerData.setIntegral(m_angularControllerData.getIntegral() + headingError);
-        m_angularControllerData.setDerivative(headingError - m_angularControllerData.getLastError());
+        m_angularControllerData.setIntegral(m_angularControllerData.getIntegral() + headingError * dt);
 
-        double turningSpeed = m_angularControllerData.getKp() * headingError + m_angularControllerData.getKi() * m_angularControllerData.getIntegral() + m_angularControllerData.getKd() * m_angularControllerData.getDerivative();
+        double headingErrorDerivative = headingError - m_angularControllerData.getLastError();
 
-        Eigen::Vector3d velocityInput(vy, vx, turningSpeed);
+        if (headingErrorDerivative > 180) {
+            headingErrorDerivative -= 360;
+        } else if (headingErrorDerivative < -180) {
+            headingErrorDerivative += 360;
+        }
+
+        m_angularControllerData.setDerivative(headingErrorDerivative / dt);
+
+        printf("Heading: %f, Heading Error: %f, Integral: %f, Derivative: %f\n", currentHeading, m_angularControllerData.getError(), m_angularControllerData.getIntegral(), m_angularControllerData.getDerivative());
+
+        double turningSpeed = -(m_angularControllerData.getKp() * headingError + m_angularControllerData.getKi() * m_angularControllerData.getIntegral() + m_angularControllerData.getKd() * m_angularControllerData.getDerivative());
+
+        Eigen::Vector3d velocityInput(vx, vy, turningSpeed);
         Eigen::Matrix<double, 4, 1> motorVelocities = kinematicsMatrix * velocityInput;
 
         double maxVal = motorVelocities.cwiseAbs().maxCoeff();

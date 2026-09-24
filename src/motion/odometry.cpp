@@ -19,8 +19,8 @@ double Odometry::DegreesToDistance(double degrees, uint8_t wheelType) {
 
 float Round(float var)
 {
-    float value = (int)(var * 100 + .5);
-    return (float)value / 100;
+    float value = (int)(var * 10 + .5);
+    return (float)value / 10;
 }
 
 Eigen::Vector2d Odometry::GetPosition() {
