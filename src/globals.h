@@ -18,7 +18,7 @@ inline pros::Motor backLeft(6, pros::MotorGears::blue, pros::MotorEncoderUnits::
 inline pros::Motor backRight(4, pros::MotorGears::blue, pros::MotorEncoderUnits::degrees);
 
 inline pros::MotorGroup lift({1, -5}, pros::MotorGear::green, pros::MotorUnits::degrees);
-inline pros::MotorGroup intake({11, 12, 18}, pros::MotorGear::blue, pros::MotorUnits::degrees);
+inline pros::MotorGroup intake({16}, pros::MotorGear::blue, pros::MotorUnits::degrees);
 inline pros::Motor toggles(20, pros::MotorGears::rpm_200, pros::MotorUnits::degrees);
 inline pros::Distance distance(15);
 inline pros::adi::Pneumatics clamp('H', false);

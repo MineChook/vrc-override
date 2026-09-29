@@ -26,11 +26,10 @@ void toggleMech() {
 }
 
 void initialize() {
-	//selector::init();
+	selector::init();
 	chassis.Calibrate();
 	chassis.GetOdometry().StartUpdating();
 	lift.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	Skills();
 }
 
 void disabled() {}
