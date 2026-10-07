@@ -11,6 +11,8 @@
  */
 class Chassis {
 private:
+    uint8_t m_turningTicks = 0;
+
     pros::Motor& m_frontLeft;
     pros::Motor& m_frontRight;
     pros::Motor& m_backLeft;

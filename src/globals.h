@@ -18,7 +18,7 @@ inline pros::Motor backLeft(6, pros::MotorGears::blue, pros::MotorEncoderUnits::
 inline pros::Motor backRight(4, pros::MotorGears::blue, pros::MotorEncoderUnits::degrees);
 
 inline pros::MotorGroup lift({1, -5}, pros::MotorGear::green, pros::MotorUnits::degrees);
-inline pros::MotorGroup intake({16}, pros::MotorGear::blue, pros::MotorUnits::degrees);
+inline pros::MotorGroup intake({-16, -13}, pros::MotorGear::blue, pros::MotorUnits::degrees);
 inline pros::Motor toggles(20, pros::MotorGears::rpm_200, pros::MotorUnits::degrees);
 inline pros::Distance distance(15);
 inline pros::adi::Pneumatics clamp('H', false);
@@ -27,9 +27,9 @@ inline pros::Rotation leftVerticalTrackingWheel(3);
 inline pros::Rotation rightVerticalTrackingWheel(-19);
 inline pros::Rotation horizontalTrackingWheel(-12);
 
-inline Odometry odometry(6.5, 6.5, 0.0000001, 3.25, 2);
+inline Odometry odometry(6.5, 6.5, 0.000000001, 3.25, 2);
 
-inline DriveControllerData driveController(0.5, 127, 5, ControllerData<double>(0.7, 0, 2));
+inline DriveControllerData driveController(0.5, 127, 5, ControllerData<double>(1.1, 0, 2));
 inline ControllerData<Eigen::Vector2d> linearController(0, 0, 0);
 inline ControllerData<double> angularController(0.6, 0, 0);
 

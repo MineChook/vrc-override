@@ -15,6 +15,11 @@ const Eigen::Matrix<double, 4, 3> kinematicsMatrix = (Eigen::Matrix<double, 4, 3
 
 void Chassis::Calibrate() {
     m_odometry.SetPosition(0.0, 0.0, 0.0);
+
+    frontLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    frontRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    backLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    backRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 void Chassis::MoveVoltage(int frontLeftVoltage, int frontRightVoltage, int backLeftVoltage, int backRightVoltage) {
@@ -32,22 +37,28 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
     if(abs(forwardSpeed) < this->m_driveControllerData.getDeadzone()) forwardSpeed = 0;
     if(abs(turningSpeed) < this->m_driveControllerData.getDeadzone()) {
 
-        this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTargetHeading() - currentHeading);
+        if (this->m_turningTicks > 0) {
+            this->m_turningTicks--;
+        } 
+        else {
 
-        if (this->m_driveControllerData.getTurningControllerData().getError() > 180) {
-            this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTurningControllerData().getError() - 360);
-        } else if (this->m_driveControllerData.getTurningControllerData().getError() < -180) {
-            this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTurningControllerData().getError() + 360);
+            this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTargetHeading() - currentHeading);
+
+            if (this->m_driveControllerData.getTurningControllerData().getError() > 180) {
+                this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTurningControllerData().getError() - 360);
+            } else if (this->m_driveControllerData.getTurningControllerData().getError() < -180) {
+                this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTurningControllerData().getError() + 360);
+            }
+
+            this->m_driveControllerData.getTurningControllerData().setIntegral(this->m_driveControllerData.getTurningControllerData().getIntegral() + this->m_driveControllerData.getTurningControllerData().getError());
+
+            this->m_driveControllerData.getTurningControllerData().setDerivative(this->m_driveControllerData.getTurningControllerData().getError() - this->m_driveControllerData.getTurningControllerData().getLastError());
+            this->m_driveControllerData.getTurningControllerData().setLastError(this->m_driveControllerData.getTurningControllerData().getError());
+
+            turningSpeed = -(this->m_driveControllerData.getTurningControllerData().getKp() * this->m_driveControllerData.getTurningControllerData().getError() + this->m_driveControllerData.getTurningControllerData().getKi() * this->m_driveControllerData.getTurningControllerData().getIntegral() + this->m_driveControllerData.getTurningControllerData().getKd() * this->m_driveControllerData.getTurningControllerData().getDerivative());
+
+            this->m_driveControllerData.SetTurnMultiplication(1);
         }
-
-        this->m_driveControllerData.getTurningControllerData().setIntegral(this->m_driveControllerData.getTurningControllerData().getIntegral() + this->m_driveControllerData.getTurningControllerData().getError());
-
-        this->m_driveControllerData.getTurningControllerData().setDerivative(this->m_driveControllerData.getTurningControllerData().getError() - this->m_driveControllerData.getTurningControllerData().getLastError());
-        this->m_driveControllerData.getTurningControllerData().setLastError(this->m_driveControllerData.getTurningControllerData().getError());
-
-        turningSpeed = -(this->m_driveControllerData.getTurningControllerData().getKp() * this->m_driveControllerData.getTurningControllerData().getError() + this->m_driveControllerData.getTurningControllerData().getKi() * this->m_driveControllerData.getTurningControllerData().getIntegral() + this->m_driveControllerData.getTurningControllerData().getKd() * this->m_driveControllerData.getTurningControllerData().getDerivative());
-
-        this->m_driveControllerData.SetTurnMultiplication(1);
     }
     else {
         this->m_driveControllerData.setTargetHeading(currentHeading);
@@ -58,6 +69,8 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
         turningSpeed *= this->m_driveControllerData.getSensitivity() * this->m_driveControllerData.GetTurnMultiplication();
 
         this->m_driveControllerData.SetTurnMultiplication(this->m_driveControllerData.GetTurnMultiplication() + 0.03);
+    
+        this->m_turningTicks = 30;
     }
 
     double vy = forwardSpeed;
