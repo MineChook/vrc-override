@@ -7,13 +7,11 @@ void Auto1() {
 }
 
 void Auto2() {
-    intake.move(-127);
-    lift.move(127);
-    pros::delay(3000);
-    chassis.MoveToPosition(36, -24, 0, 0.5);
+    controller1.print(1, 0, "test2");
+    chassis.MoveToPosition(0, 24, 0, 100);
 }
 
 void Skills() {
     controller1.print(1, 0, "test");
-    chassis.MoveToPosition(0, 0, 90, 100);
+    chassis.MoveToPosition(0, 24, 0, 100);
 }

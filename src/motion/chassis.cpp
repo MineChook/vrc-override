@@ -37,10 +37,10 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
     if(abs(forwardSpeed) < this->m_driveControllerData.getDeadzone()) forwardSpeed = 0;
     if(abs(turningSpeed) < this->m_driveControllerData.getDeadzone()) {
 
-        if (this->m_turningTicks > 0) {
+        /*if (m_turningTicks > 0) {
             this->m_turningTicks--;
         } 
-        else {
+        else {*/
 
             this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTargetHeading() - currentHeading);
 
@@ -58,7 +58,7 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
             turningSpeed = -(this->m_driveControllerData.getTurningControllerData().getKp() * this->m_driveControllerData.getTurningControllerData().getError() + this->m_driveControllerData.getTurningControllerData().getKi() * this->m_driveControllerData.getTurningControllerData().getIntegral() + this->m_driveControllerData.getTurningControllerData().getKd() * this->m_driveControllerData.getTurningControllerData().getDerivative());
 
             this->m_driveControllerData.SetTurnMultiplication(1);
-        }
+        //}
     }
     else {
         this->m_driveControllerData.setTargetHeading(currentHeading);
@@ -70,7 +70,7 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
 
         this->m_driveControllerData.SetTurnMultiplication(this->m_driveControllerData.GetTurnMultiplication() + 0.03);
     
-        this->m_turningTicks = 30;
+        //this->m_turningTicks = 30;
     }
 
     double vy = forwardSpeed;
