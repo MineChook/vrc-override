@@ -8,14 +8,15 @@ void Auto1() {
     lift.move_relative(90, 127);
     pros::delay(250);
     toggles.move(0);
-    chassis.MoveToPosition(-15.5, 24, 0, 2);
+    chassis.MoveToPosition(-15.5, 24, 0, 2, 0.6);
     lift.move_relative(-90, 127);
     clamp.set_value(false);
 
 }
 
 void Auto2() {
-    chassis.MoveToPosition(24, 24, 90, 100);
+    controller1.print(0, 0, "Auto2");
+    chassis.MoveToPosition(24, 24, 0, 100, 0.6);
 }
 
 void Skills() {
