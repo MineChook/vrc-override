@@ -89,6 +89,11 @@ public:
 
     /**
      * @brief Arcade drive that moves depending on if it is field centric or not.
+     * 
+     * @param forwardSpeed 
+     * @param strafeSpeed 
+     * @param turningSpeed 
+     * @param fieldCentric 
      */
     void CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed, bool fieldCentric = false);
 
@@ -100,8 +105,9 @@ public:
      * @param targetHeading 
      * @param timeoutSeconds 
      * @param lead 
+     * @param maxSpeed 
      */
-    void MoveToPosition(double targetX, double targetY, double targetHeading, double timeoutSeconds, double lead = 0);
+    void MoveToPosition(double targetX, double targetY, double targetHeading, double timeoutSeconds, double lead = 0, double maxSpeed = 127);
 
     /**
      * @brief Get the Odometry object
