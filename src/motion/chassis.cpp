@@ -156,10 +156,10 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
             return;
         }
 
-        double carrotX = targetX - (distanceError * lead * std::cos(targetHeading * M_PI / 180));
-        double carrotY = targetY - (distanceError * lead * std::sin(targetHeading * M_PI / 180));
+        double carrotX = targetX - (distanceError * lead * std::sin(targetHeading * M_PI / 180));
+        double carrotY = targetY - (distanceError * lead * std::cos(targetHeading * M_PI / 180));
         Eigen::Vector2d carrot(carrotX, carrotY);
-        Eigen::Vector2d carrotError(carrot);
+        Eigen::Vector2d carrotError(carrot - m_odometry.GetPosition());
 
         Eigen::Vector2d carrotTranslationError = rotation * carrotError;
 
@@ -195,7 +195,7 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
 
         MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)));
 
-        m_linearControllerData.setLastError(carrotTranslationError);
+        m_linearControllerData.setLastError(translationError);
         m_angularControllerData.setLastError(headingError);
 
         timeoutMilliseconds -= 20;
