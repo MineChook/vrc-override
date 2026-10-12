@@ -13,4 +13,4 @@ Having the code in a git remote allows us to collaborate as a team easily as eve
 
 Thank you, from the Frij team,
 
-_Thomas, Judy, Niki, Teresa, Xander, and James_
+_Thomas, Judy, Niki, Teresa, Xander, James, and Henry_
