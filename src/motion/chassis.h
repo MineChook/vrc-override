@@ -99,8 +99,9 @@ public:
      * @param targetY 
      * @param targetHeading 
      * @param timeoutSeconds 
+     * @param lead 
      */
-    void MoveToPosition(double targetX, double targetY, double targetHeading, double lead = 0, double timeoutSeconds);
+    void MoveToPosition(double targetX, double targetY, double targetHeading, double timeoutSeconds, double lead = 0);
 
     /**
      * @brief Get the Odometry object
