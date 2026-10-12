@@ -161,7 +161,7 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         Eigen::Vector2d carrot(carrotX, carrotY);
         Eigen::Vector2d carrotError(carrot - m_odometry.GetPosition());
 
-        Eigen::Vector2d carrotTranslationError = carrotError;
+        Eigen::Vector2d carrotTranslationError = rotation * carrotError;
 
         m_linearControllerData.setError(carrotTranslationError);
         m_linearControllerData.setIntegral(m_linearControllerData.getIntegral() + carrotTranslationError * dt);
