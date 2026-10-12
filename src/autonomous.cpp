@@ -15,7 +15,7 @@ void Auto1() {
 }
 
 void Auto2() {
-    chassis.MoveToPosition(24, 24, 90, 100);
+    chassis.MoveToPosition(0, 24, 0, 100);
 }
 
 void Skills() {

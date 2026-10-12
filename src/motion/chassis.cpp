@@ -159,7 +159,7 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         double carrotX = targetX - (distanceError * lead * std::cos(targetHeading * M_PI / 180));
         double carrotY = targetY - (distanceError * lead * std::sin(targetHeading * M_PI / 180));
         Eigen::Vector2d carrot(carrotX, carrotY);
-        Eigen::Vector2d carrotError(carrot - m_odometry.GetPosition());
+        Eigen::Vector2d carrotError(carrot);
 
         Eigen::Vector2d carrotTranslationError = rotation * carrotError;
 
