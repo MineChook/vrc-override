@@ -15,6 +15,7 @@ void Auto1() {
 }
 
 void Auto2() {
+    controller1.print(0, 0, "Auto2");
     chassis.MoveToPosition(0, 24, 0, 100);
 }
 

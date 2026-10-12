@@ -105,7 +105,7 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
     MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)));
 }
 
-void Chassis::MoveToPosition(double targetX, double targetY, double targetHeading, double lead, double timeoutSeconds) {
+void Chassis::MoveToPosition(double targetX, double targetY, double targetHeading, double timeoutSeconds, double lead) {
     this->m_linearControllerData.setError(Eigen::Vector2d(0, 0));
     this->m_linearControllerData.setIntegral(Eigen::Vector2d(0, 0));
     this->m_linearControllerData.setDerivative(Eigen::Vector2d(0, 0));
@@ -161,7 +161,7 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         Eigen::Vector2d carrot(carrotX, carrotY);
         Eigen::Vector2d carrotError(carrot - m_odometry.GetPosition());
 
-        Eigen::Vector2d carrotTranslationError = rotation * carrotError;
+        Eigen::Vector2d carrotTranslationError = carrotError;
 
         m_linearControllerData.setError(carrotTranslationError);
         m_linearControllerData.setIntegral(m_linearControllerData.getIntegral() + carrotTranslationError * dt);
@@ -195,7 +195,9 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
 
         MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)));
 
-        m_linearControllerData.setLastError(translationError);
+        std::cout << "vx: " << vx << " | vy: " << vy << " | Turn: " << turningSpeed << std::endl;
+
+        m_linearControllerData.setLastError(carrotTranslationError);
         m_angularControllerData.setLastError(headingError);
 
         timeoutMilliseconds -= 20;
