@@ -86,7 +86,7 @@ void Odometry::StartUpdating() {
             Eigen::Vector2d localTranslation(deltaXLocal, deltaYLocal);
             Eigen::Vector2d globalTranslation = globalRotation * localTranslation;
 
-            odometry->SetPosition(odometry->m_position[0] + globalTranslation.x(), odometry->m_position[1] + globalTranslation.y(), currentHeadingRadians);
+            odometry->SetPosition(odometry->m_position[0] - globalTranslation.x(), odometry->m_position[1] - globalTranslation.y(), -currentHeadingRadians);
 
             odometry->m_lastHeading = currentHeadingRadians;
 

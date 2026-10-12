@@ -11,16 +11,13 @@
 void toggleMech() {
 	while (true) {
 		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			toggles.move_relative(135, 127);
-			while (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-				pros::delay(50);
-			}
+			toggles.move(127);
 		}
 		else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			toggles.move_relative(295, 127);
-			while (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-				pros::delay(50);
-			}
+			toggles.move(-127);
+		}
+		else {
+			toggles.move(0);
 		}
 	}
 }

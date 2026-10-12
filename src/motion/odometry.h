@@ -4,6 +4,8 @@
 #include "Eigen/Dense"
 #include <cstdint>
 
+float Round(float var);
+
 class Odometry {
 private:
     Eigen::Vector2d m_position;

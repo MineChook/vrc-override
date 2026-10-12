@@ -3,6 +3,7 @@
 #include "Eigen/Core"
 #include "pros/misc.h"
 #include <cmath>
+#include <iostream>
 #define EIGEN_DONT_VECTORIZE
 #include "Eigen/Dense"
 
@@ -37,10 +38,16 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
     if(abs(forwardSpeed) < this->m_driveControllerData.getDeadzone()) forwardSpeed = 0;
     if(abs(turningSpeed) < this->m_driveControllerData.getDeadzone()) {
 
-        /*if (m_turningTicks > 0) {
+        if (forwardSpeed > 0 || strafeSpeed > 0 && this->m_turningTicks < 29) {
+            this->m_turningTicks = 0;
+        }
+
+        if (m_turningTicks > 0) {
             this->m_turningTicks--;
+
+            this->m_driveControllerData.setTargetHeading(currentHeading);
         } 
-        else {*/
+        else {
 
             this->m_driveControllerData.getTurningControllerData().setError(this->m_driveControllerData.getTargetHeading() - currentHeading);
 
@@ -55,10 +62,10 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
             this->m_driveControllerData.getTurningControllerData().setDerivative(this->m_driveControllerData.getTurningControllerData().getError() - this->m_driveControllerData.getTurningControllerData().getLastError());
             this->m_driveControllerData.getTurningControllerData().setLastError(this->m_driveControllerData.getTurningControllerData().getError());
 
-            turningSpeed = -(this->m_driveControllerData.getTurningControllerData().getKp() * this->m_driveControllerData.getTurningControllerData().getError() + this->m_driveControllerData.getTurningControllerData().getKi() * this->m_driveControllerData.getTurningControllerData().getIntegral() + this->m_driveControllerData.getTurningControllerData().getKd() * this->m_driveControllerData.getTurningControllerData().getDerivative());
+            turningSpeed = this->m_driveControllerData.getTurningControllerData().getKp() * this->m_driveControllerData.getTurningControllerData().getError() + this->m_driveControllerData.getTurningControllerData().getKi() * this->m_driveControllerData.getTurningControllerData().getIntegral() + this->m_driveControllerData.getTurningControllerData().getKd() * this->m_driveControllerData.getTurningControllerData().getDerivative();
 
             this->m_driveControllerData.SetTurnMultiplication(1);
-        //}
+        }
     }
     else {
         this->m_driveControllerData.setTargetHeading(currentHeading);
@@ -68,9 +75,9 @@ void Chassis::CentricArcade(int forwardSpeed, int strafeSpeed, int turningSpeed,
         this->m_driveControllerData.getTurningControllerData().setLastError(0);
         turningSpeed *= this->m_driveControllerData.getSensitivity() * this->m_driveControllerData.GetTurnMultiplication();
 
-        this->m_driveControllerData.SetTurnMultiplication(this->m_driveControllerData.GetTurnMultiplication() + 0.03);
+        this->m_driveControllerData.SetTurnMultiplication(this->m_driveControllerData.GetTurnMultiplication() + 0.06);
     
-        //this->m_turningTicks = 30;
+        this->m_turningTicks = 30;
     }
 
     double vy = forwardSpeed;
@@ -129,6 +136,7 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         currentHeading = currentHeadingRadians * 180 / M_PI;
         
         Eigen::Vector2d positionError(target - m_odometry.GetPosition());
+        std::cout << positionError.x() << ", " << positionError.y() << std::endl;
         double headingError = targetHeading - currentHeading;
 
         if (headingError > 180) {
@@ -168,9 +176,9 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
 
         m_angularControllerData.setDerivative(headingErrorDerivative / dt);
 
-        printf("Heading: %f, Heading Error: %f, Integral: %f, Derivative: %f\n", currentHeading, m_angularControllerData.getError(), m_angularControllerData.getIntegral(), m_angularControllerData.getDerivative());
+        printf("Position X: %f, Position Y: %f, Position Error X: %f, Position Error Y: %f, Translation Error X: %f, Translation Error Y: %f, Integral: %f, Derivative: %f\n", Round(m_odometry.GetPosition().x()), Round(m_odometry.GetPosition().y()), Round(positionError.x()), Round(positionError.y()), Round(translationError.x()), Round(translationError.y()), m_linearControllerData.getIntegral(), m_linearControllerData.getDerivative());
 
-        double turningSpeed = -(m_angularControllerData.getKp() * headingError + m_angularControllerData.getKi() * m_angularControllerData.getIntegral() + m_angularControllerData.getKd() * m_angularControllerData.getDerivative());
+        double turningSpeed = m_angularControllerData.getKp() * headingError + m_angularControllerData.getKi() * m_angularControllerData.getIntegral() + m_angularControllerData.getKd() * m_angularControllerData.getDerivative();
 
         Eigen::Vector3d velocityInput(vx, vy, turningSpeed);
         Eigen::Matrix<double, 4, 1> motorVelocities = kinematicsMatrix * velocityInput;
