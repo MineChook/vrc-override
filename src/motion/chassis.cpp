@@ -176,11 +176,9 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
 
         m_angularControllerData.setDerivative(headingErrorDerivative / dt);
 
-        printf("Position X: %f, Position Y: %f, Position Error X: %f, Position Error Y: %f, Translation Error X: %f, Translation Error Y: %f, Integral: %f, Derivative: %f\n", Round(m_odometry.GetPosition().x()), Round(m_odometry.GetPosition().y()), Round(positionError.x()), Round(positionError.y()), Round(translationError.x()), Round(translationError.y()), m_linearControllerData.getIntegral(), m_linearControllerData.getDerivative());
-
         double turningSpeed = m_angularControllerData.getKp() * headingError + m_angularControllerData.getKi() * m_angularControllerData.getIntegral() + m_angularControllerData.getKd() * m_angularControllerData.getDerivative();
 
-        Eigen::Vector3d velocityInput(vx, vy, turningSpeed);
+        Eigen::Vector3d velocityInput(-vy, -vx, turningSpeed);
         Eigen::Matrix<double, 4, 1> motorVelocities = kinematicsMatrix * velocityInput;
 
         double maxVal = motorVelocities.cwiseAbs().maxCoeff();

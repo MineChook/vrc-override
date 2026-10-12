@@ -2,16 +2,22 @@
 #include "globals.h"
 #include "pros/screen.hpp"
 
+//drivebase length = 15.75, drivebase width = 15, half length = 7.875, half width = 7.5
 void Auto1() {
-    intake.move_relative(270, 127);
+    toggles.move(127);
+    lift.move_relative(90, 127);
+    pros::delay(250);
+    toggles.move(0);
+    chassis.MoveToPosition(-15.5, 24, 0, 2);
+    lift.move_relative(-90, 127);
+    clamp.set_value(false);
+
 }
 
 void Auto2() {
-    controller1.print(1, 0, "test2");
-    chassis.MoveToPosition(0, 24, 0, 100);
+    chassis.MoveToPosition(24, 24, 90, 100);
 }
 
 void Skills() {
-    controller1.print(1, 0, "test");
     chassis.MoveToPosition(0, 24, 0, 100);
 }

@@ -27,6 +27,8 @@ void initialize() {
 	chassis.Calibrate();
 	chassis.GetOdometry().StartUpdating();
 	lift.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	pros::delay(1000);
+	clamp.set_value(true);
 }
 
 void disabled() {}
