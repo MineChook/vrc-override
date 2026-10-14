@@ -3,22 +3,43 @@
 #include "motion/chassis.h"
 #include "globals.h"
 #include "autonomous.h"
+#include "pros/distance.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
+#include "pros/optical.hpp"
 #include "pros/rtos.hpp"
 #include "selector.h"
 
+bool isInColour(int current, int min, int max) {
+	return current > min && current < max;
+}
+
 void toggleMech() {
 	while (true) {
-		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+		if (isInColour(optical.get_hue(), 40, 80)) {
 			toggles.move(127);
 		}
-		else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			toggles.move(-127);
+		else if (isInColour(optical.get_hue(), 0, 35)) {
+			if (!(selector::auton.team == "red")) {
+				toggles.move(127);
+			}
+			else {
+				toggles.move(0);
+			}
+		}
+		else if (isInColour(optical.get_hue(), 160, 200)) {
+			if (!(selector::auton.team == "blue")) {
+				toggles.move(127);
+			}
+			else {
+				toggles.move(0);
+			}
 		}
 		else {
 			toggles.move(0);
 		}
+
+		pros::delay(20);
 	}
 }
 
