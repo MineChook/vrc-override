@@ -17,15 +17,17 @@ void Auto1() {
     pros::delay(250);
     chassis.MoveToPosition(-16, 15, -73, 1);
     pros::delay(250);
-    chassis.MoveToPosition(-40, 30, -73, 1);
+    chassis.MoveToPosition(-29, 29.25, -90, 2.25, -0.6, 90);
     pros::delay(250);
+    chassis.MoveToPosition(-37.5, 29.25, -90, 1, 0, 40);
     clamp.set_value(true);
     lift.move_absolute(360, 127);
-    chassis.MoveToPosition(-40, 30, 90, 1.75);
+    chassis.MoveToPosition(-43, 29.25, 90, 1.75);
     pros::delay(250);
-    chassis.MoveToPosition(-25, 33, 90, 1.75);
+    chassis.MoveToPosition(-25, 29.25, 90, 1.75);
     pros::delay(250);
-    lift.move_absolute(180, 127);
+    lift.move_absolute(180, 80);
+    pros::delay(250);
     clamp.set_value(false);
 
 }
