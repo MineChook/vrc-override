@@ -17,7 +17,7 @@ void Auto1() {
     pros::delay(250);
     chassis.MoveToPosition(-16, 15, -73, 1);
     pros::delay(250);
-    chassis.MoveToPosition(-29, 29.25, -90, 2.25, -0.6, 90);
+    chassis.MoveToPosition(-28.5, 29.25, -90, 2.25, -0.6, 90);
     pros::delay(250);
     chassis.MoveToPosition(-37.5, 29.25, -90, 1, 0, 40);
     clamp.set_value(true);

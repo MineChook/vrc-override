@@ -11,36 +11,36 @@
 #include "selector.h"
 
 bool isInColour(int current, int min, int max) {
-	return current > min && current < max;
+	return current >= min && current <= max;
 }
 
 void toggleMech() {
-	while (true) {
-		if (isInColour(optical.get_hue(), 40, 80)) {
+	double hue = optical.get_hue();
+	std::cout << hue << std::endl;
+	if (isInColour(hue, 40, 80)) {
+		toggles.move(127);
+	}
+	else if (isInColour(hue, 0, 35)) {
+		if (!(selector::auton.team == "red")) {
 			toggles.move(127);
-		}
-		else if (isInColour(optical.get_hue(), 0, 35)) {
-			if (!(selector::auton.team == "red")) {
-				toggles.move(127);
-			}
-			else {
-				toggles.move(0);
-			}
-		}
-		else if (isInColour(optical.get_hue(), 160, 200)) {
-			if (!(selector::auton.team == "blue")) {
-				toggles.move(127);
-			}
-			else {
-				toggles.move(0);
-			}
 		}
 		else {
 			toggles.move(0);
 		}
-
-		pros::delay(20);
 	}
+	else if (isInColour(hue, 160, 200)) {
+		if (!(selector::auton.team == "blue")) {
+			toggles.move(127);
+		}
+		else {
+			toggles.move(0);
+		}
+	}
+	else {
+		toggles.move(0);
+	}
+
+	pros::delay(20);
 }
 
 void initialize() {
@@ -71,7 +71,6 @@ void autonomous() {
 }
 
 void opcontrol() {
-	pros::Task thread(toggleMech);
 	while (true) {
 		chassis.CentricArcade(-controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), -controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X), controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), false);
 		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
@@ -100,6 +99,7 @@ void opcontrol() {
 		else {
 			lift.move(0);
 		}
+		toggleMech();
 		pros::delay(20);
 	}
 }
