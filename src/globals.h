@@ -7,6 +7,7 @@
 #include "pros/distance.hpp"
 #include "pros/imu.hpp"
 #include "pros/misc.h"
+#include "pros/optical.hpp"
 #include "pros/rotation.hpp"
 
 inline pros::Controller controller1(pros::E_CONTROLLER_MASTER);
@@ -20,7 +21,7 @@ inline pros::Motor backRight(4, pros::MotorGears::blue, pros::MotorEncoderUnits:
 inline pros::MotorGroup lift({1, -5}, pros::MotorGear::green, pros::MotorUnits::degrees);
 inline pros::MotorGroup intake({-16, -13}, pros::MotorGear::blue, pros::MotorUnits::degrees);
 inline pros::Motor toggles(20, pros::MotorGears::rpm_200, pros::MotorUnits::degrees);
-inline pros::Distance distance(15);
+inline pros::Optical optical(14);
 inline pros::adi::Pneumatics clamp('H', false);
 
 inline pros::Rotation leftVerticalTrackingWheel(3);
