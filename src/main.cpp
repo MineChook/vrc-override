@@ -9,6 +9,7 @@
 #include "pros/optical.hpp"
 #include "pros/rtos.hpp"
 #include "selector.h"
+#include <string>
 
 bool isInColour(int current, int min, int max) {
 	return current >= min && current <= max;
@@ -16,13 +17,15 @@ bool isInColour(int current, int min, int max) {
 
 void toggleMech() {
 	double hue = optical.get_hue();
-	std::cout << hue << std::endl;
+	if (optical.get_proximity() > 5077) {
+		return;
+	}
 	if (isInColour(hue, 40, 80)) {
-		toggles.move(127);
+		toggles.move(75);
 	}
 	else if (isInColour(hue, 0, 35)) {
 		if (!(selector::auton.team == "red")) {
-			toggles.move(127);
+			toggles.move(75);
 		}
 		else {
 			toggles.move(0);
@@ -30,7 +33,7 @@ void toggleMech() {
 	}
 	else if (isInColour(hue, 160, 200)) {
 		if (!(selector::auton.team == "blue")) {
-			toggles.move(127);
+			toggles.move(75);
 		}
 		else {
 			toggles.move(0);
