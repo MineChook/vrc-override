@@ -5,6 +5,9 @@
 //drivebase length = 15.75, drivebase width = 15, half length = 7.875, half width = 7.5
 void Auto1() {
     toggles.move(127);
+    chassis.GetOdometry().SetPosition(0, 8, -45);
+    chassis.MoveToPosition(0, 0, 0, 2.0);
+    pros::delay(1000); // temp
     lift.move_absolute(90, 127);
     pros::delay(250);
     toggles.move(0);
@@ -29,7 +32,6 @@ void Auto1() {
     lift.move_absolute(180, 80);
     pros::delay(250);
     clamp.set_value(false);
-
 }
 
 void Auto2() {
