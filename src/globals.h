@@ -19,9 +19,11 @@ inline pros::Motor backLeft(6, pros::MotorGears::blue, pros::MotorEncoderUnits::
 inline pros::Motor backRight(4, pros::MotorGears::blue, pros::MotorEncoderUnits::degrees);
 
 inline pros::MotorGroup lift({1, -5}, pros::MotorGear::green, pros::MotorUnits::degrees);
-inline pros::MotorGroup intake({-16, -13}, pros::MotorGear::blue, pros::MotorUnits::degrees);
+inline pros::Motor intake(-13, pros::MotorGear::blue, pros::MotorUnits::degrees);
 inline pros::Motor toggles(20, pros::MotorGears::rpm_200, pros::MotorUnits::degrees);
+inline pros::Motor clawPivot(15, pros::MotorGears::rpm_200, pros::MotorUnits::degrees);
 inline pros::Optical optical(14);
+inline pros::Distance distance(9);
 inline pros::adi::Pneumatics clamp('H', false);
 
 inline pros::Rotation leftVerticalTrackingWheel(3);
