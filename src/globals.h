@@ -2,6 +2,8 @@
 
 #include "api.h"
 #include "motion/chassis.h"
+#include "motion/controller.hpp"
+#include "motion/clawPivotController.h"
 #include "pros/abstract_motor.hpp"
 #include "pros/adi.hpp"
 #include "pros/distance.hpp"
@@ -34,5 +36,7 @@ inline Odometry odometry(6.5, 6.5, 0.000000001, 3.25, 2);
 inline DriveControllerData driveController(0.3, 127, 5, ControllerData<double>(1.4, 0, 2));
 inline ControllerData<Eigen::Vector2d> linearController(24, 0, 2.5);
 inline ControllerData<double> angularController(4, 0, 0.3);
+inline DriveControllerData clawPivotControllerData(1, 127, 80, ControllerData<double>(1, 0, 0, 0));
+inline ClawPivotController clawPivotController(clawPivot,clawPivotControllerData);
 
 inline Chassis chassis(frontLeft, frontRight, backLeft, backRight, odometry, driveController, linearController, angularController);
