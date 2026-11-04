@@ -59,8 +59,6 @@ void toggleMech() {
 	else {
 		toggles.move(0);
 	}
-
-	pros::delay(20);
 }
 
 void initialize() {

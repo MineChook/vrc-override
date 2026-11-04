@@ -1,6 +1,10 @@
 #include "autonomous.h"
 #include "globals.h"
+#include "main.h"
+#include "motion/chassis.h"
+#include "motion/clawPivotController.h"
 #include "pros/screen.hpp"
+#include "selector.h"
 
 //drivebase length = 15.75, drivebase width = 15, half length = 7.875, half width = 7.5
 void Auto1() {
@@ -42,5 +46,34 @@ void Auto2() {
 }
 
 void Skills() {
-    chassis.MoveToPosition(0, 24, 0, 100);
+    selector::auton.setTeamPosition("red", "");
+    lift.move_relative(90, 100);
+    chassis.MoveToPosition(-3, 0, 45, 1);
+    pros::delay(250);
+    chassis.MoveToPosition(-3, -7, 45, 0.75);
+    clawPivotController.getControllerData().setTargetHeading(clawPivotController.getMotor().get_position() - 110);
+    chassis.MoveToPosition(6, -7, 45, 0.75);
+    while (!isInColour(optical.get_hue(), 0, 35)) {
+        toggleMech();
+        pros::delay(25);
+    }
+    toggles.move(0);
+    chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading() - 45);
+    chassis.MoveToPosition(-14, 0, 0, 1.5);
+    chassis.MoveToPosition(-14, 15, 0, 0.75);
+    lift.move_relative(-90, 60);
+    clawPivotController.getControllerData().setTargetHeading(clawPivotController.getMotor().get_position() + 15);
+    pros::delay(250);
+    clamp.retract();
+    pros::delay(250);
+    chassis.GetOdometry().SetPosition(-14, 8.8, chassis.GetOdometry().GetHeading());
+    chassis.MoveToPosition(-37.2, 0, 0, 1.25, 0.8);
+    pros::delay(250);
+    chassis.MoveToPosition(-37.2, 6.2, 0, 1.25, 0, 64);
+    pros::delay(250);
+    clamp.extend();
+    lift.move_relative(270, 80);
+    chassis.MoveToPosition(-23, 18.4, 90, 1.5);
+    lift.move_relative(-180, 80);
+    clamp.retract();
 }

@@ -11,6 +11,11 @@ public:
     std::string asString() {
         return team + "_" + position;
     }
+
+    void setTeamPosition(std::string team, std::string position) {
+        this->team = team;
+        this->position = position;
+    }
 };
 
 namespace selector {

@@ -66,6 +66,9 @@ void initialize(void);
 void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
+bool isInColour(int current, int min, int max);
+void toggleMech();
+
 #ifdef __cplusplus
 }
 #endif

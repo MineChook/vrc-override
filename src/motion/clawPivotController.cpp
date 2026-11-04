@@ -10,10 +10,10 @@ void ClawPivotController::StartLoop() {
             double position = this->m_motor.get_position();
 
             if (controller2.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) > this->m_controllerData.getDeadzone()) {
-                this->m_controllerData.setTargetHeading(this->m_controllerData.getTargetHeading() + 1);
+                this->m_controllerData.setTargetHeading(this->m_controllerData.getTargetHeading() - 20 * this->m_controllerData.getSensitivity());
 		    }
             else if (controller2.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) < -this->m_controllerData.getDeadzone()) {
-                this->m_controllerData.setTargetHeading(this->m_controllerData.getTargetHeading() - 1);
+                this->m_controllerData.setTargetHeading(this->m_controllerData.getTargetHeading() + 20 * this->m_controllerData.getSensitivity());
             }
 
             this->m_controllerData.getTurningControllerData().setError(this->m_controllerData.getTargetHeading() - position);

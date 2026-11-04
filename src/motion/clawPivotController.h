@@ -8,13 +8,18 @@
 class ClawPivotController {
     private:
         pros::Motor& m_motor;
-        bool m_controlled = false;
-\
-        u_int8_t tick = 0;
         DriveControllerData& m_controllerData;
 
     public:
         ClawPivotController(pros::Motor& motor, DriveControllerData& controllerData) : m_motor(motor), m_controllerData(controllerData){};
+
+        pros::Motor& getMotor() {
+            return m_motor;
+        }
+
+        DriveControllerData& getControllerData() {
+            return m_controllerData;
+        }
 
         void StartLoop();
 };

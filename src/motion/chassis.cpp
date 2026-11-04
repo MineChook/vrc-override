@@ -136,7 +136,6 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         currentHeading = currentHeadingRadians * 180 / M_PI;
         
         Eigen::Vector2d positionError(target - m_odometry.GetPosition());
-        std::cout << positionError.x() << ", " << positionError.y() << std::endl;
         double headingError = targetHeading - currentHeading;
 
         if (headingError > 180) {
@@ -196,8 +195,6 @@ void Chassis::MoveToPosition(double targetX, double targetY, double targetHeadin
         motorVelocities *= (maxSpeed / 127.0);
 
         MoveVoltage(static_cast<int>(motorVelocities(0)), static_cast<int>(motorVelocities(1)), static_cast<int>(motorVelocities(2)), static_cast<int>(motorVelocities(3)));
-
-        std::cout << "vx: " << vx << " | vy: " << vy << " | Turn: " << turningSpeed << std::endl;
 
         m_linearControllerData.setLastError(carrotTranslationError);
         m_angularControllerData.setLastError(headingError);
