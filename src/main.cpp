@@ -10,7 +10,6 @@
 #include "pros/motors.h"
 #include "pros/optical.hpp"
 #include "pros/rtos.hpp"
-#include "pros/vision.h"
 #include "selector.h"
 #include <string>
 
@@ -37,7 +36,7 @@ void toggleMech() {
 			toggles.move(50);
 		}
 		else if (isInColour(hue, 0, 35)) {
-			if (!(selector::auton.team == "red")) {
+			if (!(selector::auton.team == "red" || selector::auton.team == "skills")) {
 				toggles.move(50);
 			}
 			else {

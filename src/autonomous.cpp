@@ -46,7 +46,6 @@ void Auto2() {
 }
 
 void Skills() {
-    selector::auton.setTeamPosition("red", "");
     lift.move_relative(90, 100);
     chassis.MoveToPosition(-3, 0, 45, 1);
     pros::delay(250);
