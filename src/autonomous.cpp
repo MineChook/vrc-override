@@ -14,9 +14,17 @@ void Auto1() {
     chassis.MoveToPosition(-3, -7, 45, 0.75);
     clawPivotController.getControllerData().setTargetHeading(clawPivotController.getMotor().get_position() - 110);
     chassis.MoveToPosition(6, -7, 45, 0.75);
-    while (!isInColour(optical.get_hue(), 0, 35)) {
-        toggleMech();
-        pros::delay(25);
+    if (selector::auton.team == "red") {
+        while (!isInColour(optical.get_hue(), 0, 35)) {
+            toggleMech();
+            pros::delay(25);
+        }
+    }
+    else if (selector::auton.team == "blue") {
+        while (!isInColour(optical.get_hue(), 160, 200)) {
+            toggleMech();
+            pros::delay(25);
+        }
     }
     toggles.move(0);
     chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading() - 45);
@@ -36,9 +44,17 @@ void Auto2() {
     chassis.MoveToPosition(3, -7, 45, 0.75);
     clawPivotController.getControllerData().setTargetHeading(clawPivotController.getMotor().get_position() - 110);
     chassis.MoveToPosition(6, -7,  45, 0.75);
-    while (!isInColour(optical.get_hue(), 160, 200)) {
-        toggleMech();
-        pros::delay(25);
+    if (selector::auton.team == "red") {
+        while (!isInColour(optical.get_hue(), 0, 35)) {
+            toggleMech();
+            pros::delay(25);
+        }
+    }
+    else if (selector::auton.team == "blue") {
+        while (!isInColour(optical.get_hue(), 160, 200)) {
+            toggleMech();
+            pros::delay(25);
+        }
     }
     toggles.move(0);
     chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading() - 45);
