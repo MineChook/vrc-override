@@ -25,7 +25,7 @@ void controllerToggle() {
 		toggles.move(-25);
 	}
 	else {
-		toggles.move(0);
+		toggles.move(5);
 	}
 }
 
