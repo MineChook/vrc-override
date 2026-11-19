@@ -39,11 +39,11 @@ void Auto1() {
 
 void Auto2() {
     lift.move_relative(270, 100);
-    chassis.MoveToPosition(3, 0, 45, 1);
+    chassis.MoveToPosition(3, 0, -135, 1);
     pros::delay(250);
-    chassis.MoveToPosition(3, -7, 45, 0.75);
+    chassis.MoveToPosition(3, 7, -135, 0.75);
     clawPivotController.getControllerData().setTargetHeading(clawPivotController.getMotor().get_position() - 110);
-    chassis.MoveToPosition(6, -7,  45, 0.75);
+    chassis.MoveToPosition(6, 7,  -135, 0.75);
     if (selector::auton.team == "red") {
         while (!isInColour(optical.get_hue(), 0, 35)) {
             toggleMech();
@@ -57,9 +57,10 @@ void Auto2() {
         }
     }
     toggles.move(0);
-    chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading() - 45);
+    chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading());
+    chassis.MoveToPosition(0, 0, 0, 1.25);
     chassis.MoveToPosition(14, 0, 0, 1.5);
-    chassis.MoveToPosition(14, 15, 0, 0.75);
+    chassis.MoveToPosition(14, -15, 0, 0.75);
     lift.move_relative(-270, 50);
     clawPivotController.getControllerData().setTargetHeading(clawPivotController.getMotor().get_position() + 15);
     pros::delay(250);
@@ -88,5 +89,5 @@ void Skills() {
     clamp.retract();
     pros::delay(250);
     chassis.GetOdometry().SetPosition(-14, 8.8, chassis.GetOdometry().GetHeading());
-    chassis.MoveToPosition(-42, 0, 0, 1.25, 0.8);
+    chassis.MoveToPosition(-50, 0, 0, 1.25, 0.8);
 }
