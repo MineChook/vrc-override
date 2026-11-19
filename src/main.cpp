@@ -19,13 +19,13 @@ bool isInColour(int current, int min, int max) {
 
 void controllerToggle() {
 	if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-		toggles.move(65);
+		toggles.move(25);
 	}
 	else if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-		toggles.move(-65);
+		toggles.move(-25);
 	}
 	else {
-		toggles.move(0);
+		toggles.move(5);
 	}
 }
 
@@ -33,11 +33,11 @@ void toggleMech() {
 	if (distance.get_distance() < 50) {
 		double hue = optical.get_hue();
 		if (isInColour(hue, 40, 80)) {
-			toggles.move(50);
+			toggles.move(25);
 		}
 		else if (isInColour(hue, 0, 35)) {
 			if (!(selector::auton.team == "red" || selector::auton.team == "skills")) {
-				toggles.move(50);
+				toggles.move(25);
 			}
 			else {
 				controllerToggle();
@@ -45,7 +45,7 @@ void toggleMech() {
 		}
 		else if (isInColour(hue, 160, 200)) {
 			if (!(selector::auton.team == "blue")) {
-				toggles.move(50);
+				toggles.move(25);
 			}
 			else {
 				controllerToggle();
