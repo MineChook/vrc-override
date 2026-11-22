@@ -12,6 +12,9 @@
 #include "pros/rtos.hpp"
 #include "selector.h"
 #include <string>
+#include <sys/types.h>
+
+u_int8_t ticks = 0;
 
 bool isInColour(int current, int min, int max) {
 	return current >= min && current <= max;
@@ -57,6 +60,16 @@ void toggleMech() {
 	}
 	else {
 		toggles.move(0);
+	}
+}
+
+void holdMech() {
+	ticks--;
+	if (ticks < 1) {
+		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_A) || controller2.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+			toggleHold.toggle();
+			ticks = 25;
+		}
 	}
 }
 
@@ -127,6 +140,7 @@ void opcontrol() {
 			lift.move(0);
 		}
 		toggleMech();
+		holdMech();
 		pros::delay(20);
 	}
 }

@@ -26,7 +26,8 @@ inline pros::Motor toggles(-20, pros::MotorGears::rpm_200, pros::MotorUnits::deg
 inline pros::Motor clawPivot(15, pros::MotorGears::rpm_200, pros::MotorUnits::degrees);
 inline pros::Optical optical(14);
 inline pros::Distance distance(9);
-inline pros::adi::Pneumatics clamp('H', false);
+inline pros::adi::Pneumatics clamp('G', false);
+inline pros::adi::Pneumatics toggleHold('H', false);
 
 inline pros::Rotation leftVerticalTrackingWheel(3);
 inline pros::Rotation rightVerticalTrackingWheel(-19);
