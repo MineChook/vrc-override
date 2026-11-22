@@ -81,7 +81,7 @@ void initialize() {
 	clawPivot.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	pros::delay(1000);
 	clamp.set_value(true);
-	clawPivotController.StartLoop();
+	//clawPivotController.StartLoop();
 }
 
 void disabled() {}
@@ -104,6 +104,7 @@ void autonomous() {
 
 void opcontrol() {
 	while (true) {
+		/*
 		if (controller2.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
 			clawPivotController.getControllerData().setTargetHeading(clawPivotController.getControllerData().getTargetHeading() + 90);
 			pros::delay(500);
@@ -112,6 +113,7 @@ void opcontrol() {
 		else if (controller2.get_digital_new_release(pros::E_CONTROLLER_DIGITAL_A)) {
 			clawPivotController.getControllerData().setTargetHeading(clawPivotController.getControllerData().getTargetHeading() - 90);
 		}
+		*/
 		chassis.CentricArcade(-controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), -controller1.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X), controller1.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), false);
 		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			intake.move(127);
