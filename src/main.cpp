@@ -14,8 +14,6 @@
 #include <string>
 #include <sys/types.h>
 
-u_int8_t ticks = 0;
-
 bool isInColour(int current, int min, int max) {
 	return current >= min && current <= max;
 }
@@ -64,12 +62,12 @@ void toggleMech() {
 }
 
 void holdMech() {
-	ticks--;
-	if (ticks < 1) {
-		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_A) || controller2.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+	while (true) {
+		if (controller1.get_digital(pros::E_CONTROLLER_DIGITAL_B) || controller2.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
 			toggleHold.toggle();
-			ticks = 25;
+			pros::delay(500);
 		}
+		pros::delay(20);
 	}
 }
 
@@ -103,6 +101,7 @@ void autonomous() {
 }
 
 void opcontrol() {
+	pros::Task task(holdMech);
 	while (true) {
 		/*
 		if (controller2.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
@@ -136,13 +135,12 @@ void opcontrol() {
 			lift.move(127);
 		} 
 		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			lift.move(-80);
+			lift.move(-50);
 		}
 		else {
 			lift.move(0);
 		}
 		toggleMech();
-		holdMech();
 		pros::delay(20);
 	}
 }
