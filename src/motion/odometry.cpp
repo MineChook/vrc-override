@@ -47,7 +47,7 @@ void Odometry::StartUpdating() {
             }
 
             if (std::isnan(leftVerticalTrackingWheel.get_position()) || std::isinf(leftVerticalTrackingWheel.get_position()) || std::isnan(rightVerticalTrackingWheel.get_position()) || std::isinf(rightVerticalTrackingWheel.get_position()) || std::isnan(horizontalTrackingWheel.get_position()) || std::isinf(horizontalTrackingWheel.get_position())) {
-                controller2.set_text(1, 0, "Error: Invalid sensor reading");
+                controller1.set_text(1, 0, "Error: Invalid sensor reading");
                 pros::delay(20);
                 continue;
             }
