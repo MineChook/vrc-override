@@ -25,15 +25,15 @@ void Auto1() {
         }
     }
     chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading() - 45);
-    chassis.MoveToPosition(-15.8,0, 0, 4);
+    chassis.MoveToPosition(-13.25,0, 0, 4);
     pros::delay(200);
-    chassis.MoveToPosition(-15.8, 8, 0, 4);
+    chassis.MoveToPosition(-13.25, 9, 0, 4);
     lift.move_relative(-360, 50);
     pros::delay(500);
     clamp.retract();
     pros::delay(250);
-    chassis.MoveToPosition(-40, 0, 0, 4, 0.7);
-    chassis.MoveToPosition(-40, 11.2, 0, 4);
+    chassis.MoveToPosition(-37.5, 0, 0, 4, 0.7);
+    chassis.MoveToPosition(-37.5, 11.2, 0, 4, 0, 64);
     clamp.extend(); 
 }
 
