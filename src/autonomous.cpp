@@ -11,8 +11,7 @@ void Auto1() {
     chassis.MoveToPosition(-2, 2, 0, 1);
     lift.move_relative(360, 100);
     chassis.MoveToPosition(-2, 2, 45, 1);
-    chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading() - 45);
-    chassis.MoveToPosition(4, -3, 0, 2);
+    chassis.MoveToPosition(2, -1, 45, 2.5);
     if (selector::auton.team == "red") {
         while (!isInColour(optical.get_hue(), 0, 35)) {
             toggleMech();
@@ -25,15 +24,16 @@ void Auto1() {
             pros::delay(25);
         }
     }
-    chassis.MoveToPosition(-11.3,0, 0, 4);
+    chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading() - 45);
+    chassis.MoveToPosition(-15.8,0, 0, 4);
     pros::delay(200);
-    chassis.MoveToPosition(-11.3, 8, 0, 4);
+    chassis.MoveToPosition(-15.8, 8, 0, 4);
     lift.move_relative(-360, 50);
     pros::delay(500);
     clamp.retract();
     pros::delay(250);
-    chassis.MoveToPosition(-34.25, 0, 0, 4, 0.7);
-    chassis.MoveToPosition(-34.25, 11.8, 0, 4);
+    chassis.MoveToPosition(-40, 0, 0, 4, 0.7);
+    chassis.MoveToPosition(-40, 11.2, 0, 4);
     clamp.extend(); 
 }
 
