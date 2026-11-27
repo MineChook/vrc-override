@@ -32,9 +32,17 @@ void Auto1() {
     pros::delay(500);
     clamp.retract();
     pros::delay(250);
-    chassis.MoveToPosition(-37.5, 0, 0, 4, 0.7);
-    chassis.MoveToPosition(-37.5, 11.2, 0, 4, 0, 64);
+    chassis.MoveToPosition(-36, 0, 0, 4, 0.7);
+    chassis.MoveToPosition(-36, 12, 0, 4, 0, 64);
     clamp.extend(); 
+    lift.move_relative(720, 100);
+    chassis.MoveToPosition(-20, 18.5, 90, 4, 0, 90);
+    lift.move_relative(-720, 50);
+    clamp.retract();
+    pros::delay(250);
+    chassis.MoveToPosition(-32, 18.5, 45, 4);
+    chassis.MoveToPosition(-20, 39.5, 45, 4);
+    clamp.extend();
 }
 
 void Auto2() {
