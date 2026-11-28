@@ -46,7 +46,7 @@ void Auto1() {
         while (true) {
             if (clampDistance.get() <= distanceToClampCup) {
                 clamp.set_value(true);
-                task.remove();
+                break;
             }
             pros::delay(20);
         }
