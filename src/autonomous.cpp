@@ -31,65 +31,86 @@ void Auto1() {
     lift.move_relative(-270, 50);
     pros::delay(500);
     clamp.retract();
-    lift.move_relative(270, 50);
-    pros::delay(250);
+    pros::delay(500);
+    lift.move_relative(270, 127);
+    chassis.MoveToPosition(-13.25, 5, 0, 4);
     lift.move_relative(-270, 50);
-    chassis.MoveToPosition(-38, 0, 0, 2.5, 0.7);
-    lift.move_relative(-90, 100);
-    pros::Task task {[&task] {
+    chassis.MoveToPosition(-38, 0, 0, 4.5, 0.7);
+    pros::Task taskCup {[&taskCup] {
         while (true) {
             if (clampDistance.get() <= distanceToClampCup) {
                 clamp.set_value(true);
-                task.suspend();
+                taskCup.suspend();
             }
             pros::delay(20);
         }
     }};
     chassis.MoveToPosition(-38, 12, 0, 2, 0, 64);
     lift.move_relative(450, 100);
-    chassis.MoveToPosition(-20, 18.5, 90, 4, 0, 90);
+    chassis.MoveToPosition(-20, 18.5, 90, 2.75, 0, 90);
     lift.move_relative(-360, 50);
     pros::delay(500);
     clamp.retract();
     pros::delay(250);
     chassis.MoveToPosition(-32, 18.5, 45, 4);
     lift.move_relative(-90, 100);
-    task.resume();
+    taskCup.resume();
     chassis.MoveToPosition(-18.5, 38, 45, 4, 0, 64);
     lift.move_relative(720, 100);
     pros::delay(250);
-    chassis.MoveToPosition(-12.5, 26.5, 180, 4);
+    chassis.MoveToPosition(-12.25, 27.25, 180, 4);
     lift.move_relative(-360, 50);
     pros::delay(500);
     clamp.retract();
     pros::delay(250);
-    chassis.MoveToPosition(-13, 30, 180, 4);
+    chassis.MoveToPosition(-12.25, 53.25, 180, 4);
+    chassis.MoveToPosition(-12.25, 53.25, 90, 4);
+    lift.move_relative(-360, 50);
 }
 
 void Auto2() {
-    chassis.MoveToPosition(0, 0, 90, 10);
+    
 }
 
 void Skills() {
-    lift.move_relative(270, 100);
-    chassis.MoveToPosition(-3, 0, 45, 1);
-    pros::delay(250);
-    chassis.MoveToPosition(-3, -7, 45, 0.75);
-    //clawPivotController.getControllerData().setTargetHeading(clawPivotController.getMotor().get_position() - 110);
-    chassis.MoveToPosition(6, -7, 45, 0.75);
-    while (!isInColour(optical.get_hue(), 0, 35)) {
-        toggleMech();
-        pros::delay(25);
+    Auto1();
+    pros::Task taskCup {[&taskCup] {
+        while (true) {
+            if (clampDistance.get() <= distanceToClampCup) {
+                clamp.set_value(true);
+                taskCup.suspend();
+            }
+            pros::delay(20);
+        }
+    }};
+    for (int i = 0; i < 2; i++) {
+        chassis.MoveToPosition(-1.25, 53.25, 90, 4);
+        chassis.MoveToPosition(-12.25, 53.25, 90, 4);
+        lift.move_relative(960 + 270 * i, 127);
+        chassis.MoveToPosition(-12.25, 53.25, 180, 4);
+        chassis.MoveToPosition(-12.25, 27.25, 180, 4);
+        lift.move_relative(-360, 50);
+        clamp.retract();
+        pros::delay(250);
+        lift.move_relative(-600 - 270 * i, 127);
+        taskCup.resume();
     }
-    toggles.move(0);
-    chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading() - 45);
-    chassis.MoveToPosition(-14, 0, 0, 1.5);
-    chassis.MoveToPosition(-14, 15, 0, 0.75);
-    lift.move_relative(-270, 50);
-    //clawPivotController.getControllerData().setTargetHeading(clawPivotController.getMotor().get_position() + 15);
-    pros::delay(250);
+    taskCup.suspend();
+    pros::Task taskPin {[&taskPin] {
+        while (true) {
+            if (clampDistance.get() <= distanceToClampCup) {
+                clamp.set_value(true);
+                taskPin.suspend();
+            }
+            pros::delay(20);
+        }
+    }};
+    chassis.MoveToPosition(-1.25, 53.25, 90, 4);
+    chassis.MoveToPosition(-12.25, 53.25, 90, 4);
+    lift.move_relative(960, 127);
+    chassis.MoveToPosition(-12.25, 53.25, 180, 4);
+    chassis.MoveToPosition(-60, 29.25, 180, 4);
+    lift.move_relative(-360, 50);
     clamp.retract();
-    pros::delay(250);
-    chassis.GetOdometry().SetPosition(-14, 8.8, chassis.GetOdometry().GetHeading());
-    chassis.MoveToPosition(-50, 0, 0, 1.25, 0.8);
+    lift.move_relative(270, 127);
 }
