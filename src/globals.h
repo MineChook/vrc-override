@@ -30,7 +30,8 @@ inline pros::adi::Pneumatics clamp('G', false);
 inline pros::Distance clampDistance(13);
 inline pros::adi::Pneumatics toggleHold('H', false);
 
-inline uint8_t distanceToClamp = 92;
+inline uint8_t distanceToClampCup = 100;
+inline uint8_t distanceToClampPin = 120;
 
 inline pros::Rotation leftVerticalTrackingWheel(3);
 inline pros::Rotation rightVerticalTrackingWheel(-19);

@@ -5,14 +5,17 @@
 #include "autonomous.h"
 #include "motion/clawPivotController.h"
 #include "pros/ai_vision.h"
+#include "pros/device.hpp"
 #include "pros/distance.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/optical.hpp"
 #include "pros/rtos.hpp"
 #include "selector.h"
+#include <atomic>
 #include <string>
 #include <sys/types.h>
+#include <thread>
 
 bool isInColour(int current, int min, int max) {
 	return current >= min && current <= max;
@@ -102,6 +105,8 @@ void autonomous() {
 
 void opcontrol() {
 	pros::Task task(holdMech);
+	bool firstTime = true;
+	int16_t ticks = 0;
 	while (true) {
 		/*
 		if (controller2.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
@@ -125,22 +130,40 @@ void opcontrol() {
 		}
 
 		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-			if (clampDistance.get() <= distanceToClamp) {
-				clamp.set_value(true);
+			if (firstTime) {
+				ticks = 5;
+				firstTime = false;
+			}
+			else {
+				ticks--;
+			}
+			if (ticks <= 0) {
+				if (clampDistance.get() <= distanceToClampCup) {
+					clamp.set_value(true);
+				}
+				ticks = 0;
 			}
 		}
-		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
-			clamp.set_value(true);
+		else {
+			if (ticks > 0) {
+				clamp.set_value(true);
+			}
+			firstTime = true;
 		}
-		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			clamp.set_value(false);
+		}
+		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+			if (clampDistance.get() <= distanceToClampPin) {
+					clamp.set_value(true);
+			}
 		}
 		
 		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
 			lift.move(127);
 		} 
 		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			lift.move(-50);
+			lift.move(-70);
 		}
 		else {
 			lift.move(0);
