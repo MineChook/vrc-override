@@ -125,6 +125,7 @@ void opcontrol() {
 		}
 
 		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+			controller1.set_text(1, 0, std::to_string(clampDistance.get()));
 			if (clampDistance.get() <= distanceToClamp) {
 				clamp.set_value(true);
 			}
