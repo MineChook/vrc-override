@@ -25,9 +25,12 @@ inline pros::Motor intake(-13, pros::MotorGear::blue, pros::MotorUnits::degrees)
 inline pros::Motor toggles(-20, pros::MotorGears::rpm_200, pros::MotorUnits::degrees);
 inline pros::Motor clawPivot(15, pros::MotorGears::rpm_200, pros::MotorUnits::degrees);
 inline pros::Optical optical(14);
-inline pros::Distance distance(9);
+inline pros::Distance toggleDistance(9);
 inline pros::adi::Pneumatics clamp('G', false);
+inline pros::Distance clampDistance(13);
 inline pros::adi::Pneumatics toggleHold('H', false);
+
+inline uint8_t distanceToClamp = 92;
 
 inline pros::Rotation leftVerticalTrackingWheel(3);
 inline pros::Rotation rightVerticalTrackingWheel(-19);

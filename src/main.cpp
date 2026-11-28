@@ -31,7 +31,7 @@ void controllerToggle() {
 }
 
 void toggleMech() {
-	if (distance.get_distance() < 50) {
+	if (toggleDistance.get_distance() < 50) {
 		double hue = optical.get_hue();
 		if (isInColour(hue, 40, 80)) {
 			toggles.move(25);
@@ -125,6 +125,11 @@ void opcontrol() {
 		}
 
 		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+			if (clampDistance.get() <= distanceToClamp) {
+				clamp.set_value(true);
+			}
+		}
+		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
 			clamp.set_value(true);
 		}
 		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
