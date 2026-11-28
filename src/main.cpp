@@ -152,11 +152,13 @@ void opcontrol() {
 		}
 		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			clamp.set_value(false);
+			firstTime = true;
 		}
 		else if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
 			if (clampDistance.get() <= distanceToClampPin) {
 					clamp.set_value(true);
 			}
+			firstTime = true;
 		}
 		
 		if (controller2.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
