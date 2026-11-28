@@ -25,40 +25,45 @@ void Auto1() {
         }
     }
     chassis.GetOdometry().SetPosition(0, 0, chassis.GetOdometry().GetHeading() - 45);
-    chassis.MoveToPosition(-13.25,0, 0, 4);
+    chassis.MoveToPosition(-13.25, 0, 0, 4);
     pros::delay(200);
-    chassis.MoveToPosition(-13.25, 9, 0, 4);
-    lift.move_relative(-360, 50);
+    chassis.MoveToPosition(-13.25, 9, 0, 1);
+    lift.move_relative(-270, 50);
     pros::delay(500);
     clamp.retract();
+    lift.move_relative(270, 50);
     pros::delay(250);
-    chassis.MoveToPosition(-36, 0, 0, 4, 0.7);
-    chassis.MoveToPosition(-36, 12, 0, 4, 0, 64);
-    clamp.extend(); 
-    lift.move_relative(450, 100);
-    chassis.MoveToPosition(-20, 18.5, 90, 4, 0, 90);
-    lift.move_relative(-450, 50);
-    pros::delay(500);
-    clamp.retract();
-    pros::delay(250);
-    chassis.MoveToPosition(-32, 18.5, 45, 4);
-    pros::Task task {[=] {
+    lift.move_relative(-270, 50);
+    chassis.MoveToPosition(-38, 0, 0, 2.5, 0.7);
+    lift.move_relative(-90, 100);
+    pros::Task task {[&task] {
         while (true) {
             if (clampDistance.get() <= distanceToClampCup) {
                 clamp.set_value(true);
-                break;
+                task.suspend();
             }
             pros::delay(20);
         }
     }};
-    chassis.MoveToPosition(-19.7, 36.7, 45, 4);
-    clamp.extend();
-    lift.move_relative(720, 100);
-    pros::delay(250);
-    chassis.MoveToPosition(-13, 26.9, 180, 4);
-    lift.move_relative(-720, 50);
+    chassis.MoveToPosition(-38, 12, 0, 2, 0, 64);
+    lift.move_relative(450, 100);
+    chassis.MoveToPosition(-20, 18.5, 90, 4, 0, 90);
+    lift.move_relative(-360, 50);
     pros::delay(500);
     clamp.retract();
+    pros::delay(250);
+    chassis.MoveToPosition(-32, 18.5, 45, 4);
+    lift.move_relative(-90, 100);
+    task.resume();
+    chassis.MoveToPosition(-18.5, 38, 45, 4, 0, 64);
+    lift.move_relative(720, 100);
+    pros::delay(250);
+    chassis.MoveToPosition(-12.5, 26.5, 180, 4);
+    lift.move_relative(-360, 50);
+    pros::delay(500);
+    clamp.retract();
+    pros::delay(250);
+    chassis.MoveToPosition(-13, 30, 180, 4);
 }
 
 void Auto2() {
