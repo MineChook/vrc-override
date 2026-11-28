@@ -42,11 +42,20 @@ void Auto1() {
     clamp.retract();
     pros::delay(250);
     chassis.MoveToPosition(-32, 18.5, 45, 4);
+    pros::Task task {[=] {
+        while (true) {
+            if (clampDistance.get() <= distanceToClampCup) {
+                clamp.set_value(true);
+                task.remove();
+            }
+            pros::delay(20);
+        }
+    }};
     chassis.MoveToPosition(-19.7, 36.7, 45, 4);
     clamp.extend();
     lift.move_relative(720, 100);
     pros::delay(250);
-    chassis.MoveToPosition(-9.1, 35.9, 180, 4);
+    chassis.MoveToPosition(-13, 26.9, 180, 4);
     lift.move_relative(-720, 50);
     pros::delay(500);
     clamp.retract();
